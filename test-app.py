@@ -1,9 +1,10 @@
 from flask import Flask, session, redirect, url_for, escape, request
+from globalfunction import *
 
 app = Flask(__name__)
 
 # Set the secret key to some random bytes. Keep this really secret!
-app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
+app.secret_key = 'J84z0UH06f8gy*fg8vHg'
 
 @app.route('/')
 def index():
@@ -16,12 +17,8 @@ def login():
     if request.method == 'POST':
         session['username'] = request.form['username']
         return redirect(url_for('index'))
-    return '''
-        <form method="post">
-            <p><input type=text name=username>
-            <p><input type=submit value=Login>
-        </form>
-    '''
+    show_the_login_form()
+
 
 @app.route('/logout')
 def logout():
