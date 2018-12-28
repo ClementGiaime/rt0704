@@ -22,12 +22,14 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if sessionIsDefine() == True :
-        return redirect(url_for('index'))
+        return redirect(url_for('home'))
     if request.method == 'POST':
-
-        session['username'] = request.form['username']
-        session['formation'] = "ASR"
-        session['listmatiere'] = ["RT0701", "RT0702", "RT0703", "RT0704"]
+        if string_match(request.form['username']) == True :
+            session['username'] = request.form['username']
+            session['formation'] = "ASR"
+            session['listmatiere'] = ["RT0701", "RT0702", "RT0703", "RT0704"]
+        else :
+            return render_template('login/index.html', error="Caractère incorrecte !")
         return redirect(url_for('home'))
     else :
         return render_template('login/index.html')
@@ -48,6 +50,8 @@ def logout():
 
 @app.route('/home')
 def home():
+    if sessionIsDefine() == False :
+        return redirect(url_for('login'))
     return "Page home après authentification"
 
 
@@ -55,6 +59,8 @@ def home():
 
 @app.route('/config_QCM')
 def config_qcm():
+    if sessionIsDefine() == False :
+        return redirect(url_for('login'))
     return "Page de configuration avant la création du QCM (Nom du QCM, Matiere, Nombre de question)"
 
 
@@ -62,6 +68,8 @@ def config_qcm():
 
 @app.route('/create_QCM')
 def create_qcm():
+    if sessionIsDefine() == True :
+        return redirect(url_for('login'))
     return "Page de création du QCM, ne s'affiche que quand l'on a configurer le QCM"
 
 
@@ -69,6 +77,8 @@ def create_qcm():
 
 @app.route('/list_qcm')
 def list_qcm():
+    if sessionIsDefine() == True :
+        return redirect(url_for('index'))
     return "Page de choix des QCM"
 
 

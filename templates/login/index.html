@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-	<title>Login</title>
+	<title>QCM - Login</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="shortcut icon" href="{{ url_for('static', filename='icon/favicon.png') }}">
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='login/utils.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='login/main.css') }}">
 </head>
@@ -28,7 +29,10 @@
 						<span class="focus-input100"></span>
 					</div>
 
-					<div class="text-right p-t-13 p-b-23">
+					<div class="text-right p-t-23 p-b-23">
+						{% if error %}
+						<span class="login100-form-error">{{ error }}</span>
+						{% endif %}
 					</div>
 
 					<div class="container-login100-form-btn">

@@ -209,6 +209,13 @@ iframe {
   padding-bottom: 39px;
 }
 
+.login100-form-error {
+  font-family: Open sans regular,Arial,sans-serif;
+  font-size: 15px;
+  color: #b00020;
+
+}
+
 /*------------------------------------------------------------------
 [ Input ]*/
 
