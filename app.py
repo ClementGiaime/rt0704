@@ -28,9 +28,11 @@ def login():
             session['username'] = request.form['username']
             session['formation'] = "ASR"
             session['listmatiere'] = ["RT0701", "RT0702", "RT0703", "RT0704"]
+            listuser = usernameIsDefine(request.form['username'])
+            return listuser
         else :
             return render_template('login/index.html', error="Caractère incorrecte !")
-        return redirect(url_for('home'))
+        #return redirect(url_for('home'))
     else :
         return render_template('login/index.html')
 
@@ -68,7 +70,7 @@ def config_qcm():
 
 @app.route('/create_QCM')
 def create_qcm():
-    if sessionIsDefine() == True :
+    if sessionIsDefine() == False :
         return redirect(url_for('login'))
     return "Page de création du QCM, ne s'affiche que quand l'on a configurer le QCM"
 
@@ -77,7 +79,7 @@ def create_qcm():
 
 @app.route('/list_qcm')
 def list_qcm():
-    if sessionIsDefine() == True :
+    if sessionIsDefine() == False :
         return redirect(url_for('index'))
     return "Page de choix des QCM"
 
