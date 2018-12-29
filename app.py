@@ -21,15 +21,25 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    #####========================================####
+    ###   Test si le client possède une session   ###
     if sessionIsDefine() == True :
         return redirect(url_for('home'))
+    #####==========================================####
+    ###   Test si la requet http est de type POST   ###
     if request.method == 'POST':
         if string_match(request.form['username']) == True :
-            session['username'] = request.form['username']
-            session['formation'] = "ASR"
-            session['listmatiere'] = ["RT0701", "RT0702", "RT0703", "RT0704"]
-            listuser = usernameIsDefine(request.form['username'])
-            return listuser
+
+            list_info_user = request_session(request.form['username'])
+
+            if not list_info_user :
+                return render_template('login/index.html', error="L'utilisateur n'existe pas !")
+            else :
+                session['username'] = list_info_user[0]
+                session['formation'] = list_info_user[1]
+                session['listmatiere'] = list_info_user[2]
+                return redirect(url_for('home'))
+
         else :
             return render_template('login/index.html', error="Caractère incorrecte !")
         #return redirect(url_for('home'))
@@ -54,7 +64,15 @@ def logout():
 def home():
     if sessionIsDefine() == False :
         return redirect(url_for('login'))
-    return "Page home après authentification"
+
+    list_xml = list_dir("./xml/qcm/", r'(.xml)$')
+    qcm_allow = list_xml_allow("xml/qcm/", list_xml, session['formation'], session['listmatiere'])
+
+    print(qcm_allow)
+    html="<h1>Welcome !<h1>"
+    for xml in qcm_allow:
+        html = html + xml + "<br>"
+    return html
 
 
 
