@@ -4,6 +4,7 @@ import re
 from lxml import etree
 from os import listdir
 
+
 #####========================================####
 ###   Test si le client possède une session   ###
 def sessionIsDefine():
@@ -12,12 +13,16 @@ def sessionIsDefine():
     else :
         return False
 
+
 #####===================================================================####
 ###   Test si la chaine ne contient que des caractères de la whitelist   ###
 def string_match(string, regexp = r'[A-Za-z0-9]'):
     return bool(re.compile(regexp).search(string))
 
 
+#####===============================================================================#####
+###   Test si l'utilisateur donné existe dans la base de permission xml               ###
+###   Retourne une liste ["nom","formation",["matiere1","matiere2"...,"matieren"] ]   ###
 def request_session(username):
     tree = etree.parse("xml/perm.xml")
 
@@ -38,6 +43,9 @@ def request_session(username):
 
     return [user_request[0].text, formation_request[0].text, listmatiere_string]
 
+
+#####==================================================================================================#####
+###   Retourne une liste des fichiers du le dossier path et dont les fichers correspondent à la regexp   ###
 def list_dir(path, regexp):
     list = []
     print(listdir(path))
@@ -46,6 +54,9 @@ def list_dir(path, regexp):
             list.append(file)
     return list
 
+
+#####=========================================================================================================================#####
+###   Retourne une liste des fichiers dont l'utilisateur peut utiliser, critère en fonction de la formation et de la matiere   ###
 def list_xml_allow(path, list_xml, formation, listmatiere) :
 
     list_qcm_allow = []
@@ -54,8 +65,7 @@ def list_xml_allow(path, list_xml, formation, listmatiere) :
         tree = etree.parse(xurl)
         print(tree.xpath("/QCM/formation")[0].text)
         print(tree.xpath("/QCM/matiere")[0].text)
-        if tree.xpath("/QCM/formation")[0].text == formation and tree.xpath("/QCM/matiere")[0].text in listmatiere :
+        if formation in tree.xpath("/QCM/formation")[0].text and tree.xpath("/QCM/matiere")[0].text in listmatiere :
             list_qcm_allow.append(xml)
-
 
     return list_qcm_allow
