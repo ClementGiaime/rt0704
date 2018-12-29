@@ -3,6 +3,7 @@
   <nom>QCM numéro 1 CHPS0711</nom>
   <formation>CHPS</formation>
   <matiere>CHPS0711</matiere>
+  <auteur>FLAUZAC</auteur>
   <contenu>
     <question num="1">
       <intitule>Combien d'adresses IP sont disponibles pour les hôtes dans le réseau 56.12.45.0/24 ?</intitule>

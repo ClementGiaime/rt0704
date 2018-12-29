@@ -37,7 +37,9 @@ def login():
             else :
                 session['username'] = list_info_user[0]
                 session['formation'] = list_info_user[1]
-                session['listmatiere'] = list_info_user[2]
+                session['grade'] = list_info_user[2]
+                session['listmatiere'] = list_info_user[3]
+
                 return redirect(url_for('home'))
 
         else :
@@ -54,6 +56,7 @@ def logout():
     # remove the username from the session if it's there
     session.pop('username', None)
     session.pop('formation', None)
+    session.pop('grade', None)
     session.pop('listmatiere', None)
     return redirect(url_for('index'))
 
@@ -65,11 +68,17 @@ def home():
     if sessionIsDefine() == False :
         return redirect(url_for('login'))
 
+    if session['grade'] == "etudiant" :
+        return render_template('home/index.html', grade="etudiant")
+    elif session['grade'] == "professeur" :
+        return render_template('home/index.html', grade="professeur")
+
+
     list_xml = list_dir("./xml/qcm/", r'(.xml)$')
     qcm_allow = list_xml_allow("xml/qcm/", list_xml, session['formation'], session['listmatiere'])
 
     print(qcm_allow)
-    html="<h1>Welcome !<h1>"
+    html="<h1>Liste des QCM<h1>"
     for xml in qcm_allow:
         html = html + xml + "<br>"
     return html

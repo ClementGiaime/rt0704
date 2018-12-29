@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<title>QCM - Login</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="shortcut icon" href="{{ url_for('static', filename='icon/favicon.png') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='login/utils.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='login/main.css') }}">
+</head>
+
+<body>
+  {% if grade == "etudiant" %}
+  <h1>Etudiant</h1>
+  <br>
+  <h3>Voir vers les QCM</h3>
+  <h3>Voir vers la correction des QCM</h3>
+  <br><br>
+  {% endif %}
+
+  {% if grade == "professeur" %}
+  <h1>Professeur</h1>
+  <br>
+  <h3>Mes QCM</h3>
+  <h3>Créer un QCM</h3>
+  <br><br>
+  {% endif %}
+
+  <h4>logout<h4>
+
+</body>
+</html>

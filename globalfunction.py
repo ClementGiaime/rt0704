@@ -34,6 +34,9 @@ def request_session(username):
     xurl = "/utilisateurs/util[nom='" + username + "']/formation"
     formation_request = tree.xpath(xurl)
 
+    xurl = "/utilisateurs/util[nom='" + username + "']/grade"
+    grade_request = tree.xpath(xurl)
+
     xurl = "/utilisateurs/util[nom='" + username + "']/listmatiere/matiere"
     listmatiere_request = tree.xpath(xurl)
 
@@ -41,7 +44,7 @@ def request_session(username):
     for matiere in listmatiere_request:
         listmatiere_string.append(matiere.text)
 
-    return [user_request[0].text, formation_request[0].text, listmatiere_string]
+    return [user_request[0].text, formation_request[0].text, grade_request[0].text, listmatiere_string]
 
 
 #####==================================================================================================#####
@@ -55,17 +58,21 @@ def list_dir(path, regexp):
     return list
 
 
+def xml_allow(path, xml, formation, listmatiere) :
+    xurl = path + xml
+    tree = etree.parse(xurl)
+    if formation in tree.xpath("/QCM/formation")[0].text and tree.xpath("/QCM/matiere")[0].text in listmatiere :
+        return True
+    else :
+        return False
+
 #####=========================================================================================================================#####
 ###   Retourne une liste des fichiers dont l'utilisateur peut utiliser, critère en fonction de la formation et de la matiere   ###
 def list_xml_allow(path, list_xml, formation, listmatiere) :
 
     list_qcm_allow = []
     for xml in list_xml:
-        xurl = path + xml
-        tree = etree.parse(xurl)
-        print(tree.xpath("/QCM/formation")[0].text)
-        print(tree.xpath("/QCM/matiere")[0].text)
-        if formation in tree.xpath("/QCM/formation")[0].text and tree.xpath("/QCM/matiere")[0].text in listmatiere :
+        if xml_allow(path, xml, formation, listmatiere) == True :
             list_qcm_allow.append(xml)
 
     return list_qcm_allow

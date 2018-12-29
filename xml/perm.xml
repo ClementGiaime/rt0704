@@ -2,6 +2,7 @@
 <utilisateurs>
   <util>
     <nom>GIAIME</nom>
+    <grade>etudiant</grade>
     <formation>ASR</formation>
     <listmatiere>
       <matiere>RT0701</matiere>
@@ -18,6 +19,7 @@
   </util>
   <util>
     <nom>GULDNER</nom>
+    <grade>etudiant</grade>
     <formation>CHPS</formation>
     <listmatiere>
       <matiere>CHPS0711</matiere>
@@ -30,6 +32,16 @@
       <matiere>CHPS0742</matiere>
       <matiere>AN0701</matiere>
       <matiere>COMM0701</matiere>
+    </listmatiere>
+  </util>
+  <util>
+    <nom>FLAUZAC</nom>
+    <grade>professeur</grade>
+    <formation>CHPS</formation>
+    <listmatiere>
+      <matiere>CHPS0711</matiere>
+      <matiere>RT0701</matiere>
+      <matiere>AN0701</matiere>
     </listmatiere>
   </util>
 </utilisateurs>
