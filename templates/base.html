@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<title>QCM - Login</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="shortcut icon" href="{{ url_for('static', filename='icon/favicon.png') }}">
+</head>
+
+<body>
+  {% if user_info %}
+  <h2>{{ user_info['username'] }}</h2>
+  <h4>Status : {{ user_info['grade'] }}</h4>
+  <h4>Formation : {{ user_info['formation'] }}</h4>
+  <h4>Liste des matieres :</h4>
+    {% for matiere in user_info['listmatiere'] %}
+    <h5>{{ matiere }}</h5>
+    {% endfor %}
+  {% endif %}
+  <h4>logout<h4>
+
+
+  {% block content %}{% endblock %}
+</body>

@@ -5,9 +5,9 @@ from lxml import etree
 from os import listdir
 
 
-#####========================================####
-###   Test si le client possède une session   ###
-def sessionIsDefine():
+#####=======================================================================================####
+###   Return True si les varaibles de session username, formation, listmatiere sont définie  ###
+def session_is_define():
     if 'username' in session and 'formation' in session and 'listmatiere' in session :
         return True
     else :
@@ -22,7 +22,7 @@ def string_match(string, regexp = r'[A-Za-z0-9]'):
 
 #####===============================================================================#####
 ###   Test si l'utilisateur donné existe dans la base de permission xml               ###
-###   Retourne une liste ["nom","formation",["matiere1","matiere2"...,"matieren"] ]   ###
+###   Retourne une liste ["nom","formation","grade",["matiere1","matiere2"...,"matieren"] ]   ###
 def request_session(username):
     tree = etree.parse("xml/perm.xml")
 
@@ -49,6 +49,7 @@ def request_session(username):
 
 #####==================================================================================================#####
 ###   Retourne une liste des fichiers du le dossier path et dont les fichers correspondent à la regexp   ###
+###   list = ["qcm-1","qcm-2","qcm-3","qcm-n"]
 def list_dir(path, regexp):
     list = []
     print(listdir(path))
@@ -57,8 +58,18 @@ def list_dir(path, regexp):
             list.append(file)
     return list
 
+def list_xml_info(path, list_xml, formation, listmatiere) :
+    list_qcm_info = []
 
-def xml_allow(path, xml, formation, listmatiere) :
+    for xml in list_xml :
+        xurl = path + xml
+        tree = etree.parse(xurl)
+        info = [ xml, tree.xpath("/QCM/formation")[0].text, tree.xpath("/QCM/matiere")[0].text, tree.xpath("/QCM/auteur")[0].text ]
+        list_qcm_info.append(info)
+
+    return list_qcm_info
+
+def xml_allow_etudiant(path, xml, formation, listmatiere) :
     xurl = path + xml
     tree = etree.parse(xurl)
     if formation in tree.xpath("/QCM/formation")[0].text and tree.xpath("/QCM/matiere")[0].text in listmatiere :
@@ -66,13 +77,26 @@ def xml_allow(path, xml, formation, listmatiere) :
     else :
         return False
 
+
+def xml_allow_professeur(path, xml, auteur, listmatiere) :
+    xurl = path + xml
+    tree = etree.parse(xurl)
+    if tree.xpath("/QCM/auteur")[0].text in auteur and tree.xpath("/QCM/matiere")[0].text in listmatiere :
+        return True
+    else :
+        return False
+
 #####=========================================================================================================================#####
 ###   Retourne une liste des fichiers dont l'utilisateur peut utiliser, critère en fonction de la formation et de la matiere   ###
-def list_xml_allow(path, list_xml, formation, listmatiere) :
+def list_xml_allow(path, list_xml, formation, listmatiere, grade, nom) :
 
     list_qcm_allow = []
     for xml in list_xml:
-        if xml_allow(path, xml, formation, listmatiere) == True :
-            list_qcm_allow.append(xml)
+        if grade == "etudiant" :
+            if xml_allow_etudiant(path, xml, formation, listmatiere) == True :
+                list_qcm_allow.append(xml)
+        elif grade == "professeur" :
+            if xml_allow_professeur(path, xml, nom, listmatiere) :
+                list_qcm_allow.append(xml)
 
     return list_qcm_allow

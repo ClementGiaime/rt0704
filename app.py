@@ -12,24 +12,33 @@ app.secret_key = 'J84z0UH06f8gy*fg8vHg'
 
 @app.route('/')
 def index():
-    if sessionIsDefine() == True :
+    #####==========================================================####
+    ###   Si le client possède une session redirection vers /home   ###
+    if session_is_define() == True :
         return redirect(url_for('home'))
-    elif sessionIsDefine() == False :
+    #####====================####
+    ###   Sinon vers /loginb  ###
+    elif session_is_define() == False :
         return redirect(url_for('login'))
 
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    #####========================================####
-    ###   Test si le client possède une session   ###
-    if sessionIsDefine() == True :
+    #####=========================================================####
+    ###   Si le client possède une session redirection vers /home  ###
+    if session_is_define() == True :
         return redirect(url_for('home'))
-    #####==========================================####
-    ###   Test si la requet http est de type POST   ###
+    #####===================================================#####
+    ###   Si la requet http est de type POST                  ###
+    ###   Création d'un session si l'utilisateur est valide   ###
     if request.method == 'POST':
+        ## Whitelist
         if string_match(request.form['username']) == True :
 
+            ## Requet sur le fichier XML
+            ## list_info_user = ["nom","formation","grade",["matiere1","matiere2"...,"matieren"] ]
+            ## Si l'utiliseur n'existe pas list_info_user = []
             list_info_user = request_session(request.form['username'])
 
             if not list_info_user :
@@ -44,7 +53,6 @@ def login():
 
         else :
             return render_template('login/index.html', error="Caractère incorrecte !")
-        #return redirect(url_for('home'))
     else :
         return render_template('login/index.html')
 
@@ -58,37 +66,27 @@ def logout():
     session.pop('formation', None)
     session.pop('grade', None)
     session.pop('listmatiere', None)
-    return redirect(url_for('index'))
+    return redirect(url_for('login'))
 
 
 
 
 @app.route('/home')
 def home():
-    if sessionIsDefine() == False :
+    if session_is_define() == False :
         return redirect(url_for('login'))
 
     if session['grade'] == "etudiant" :
-        return render_template('home/index.html', grade="etudiant")
+        return render_template('home/index.html', grade="etudiant", user_info=session)
     elif session['grade'] == "professeur" :
-        return render_template('home/index.html', grade="professeur")
-
-
-    list_xml = list_dir("./xml/qcm/", r'(.xml)$')
-    qcm_allow = list_xml_allow("xml/qcm/", list_xml, session['formation'], session['listmatiere'])
-
-    print(qcm_allow)
-    html="<h1>Liste des QCM<h1>"
-    for xml in qcm_allow:
-        html = html + xml + "<br>"
-    return html
+        return render_template('home/index.html', grade="professeur", user_info=session)
 
 
 
 
 @app.route('/config_QCM')
 def config_qcm():
-    if sessionIsDefine() == False :
+    if session_is_define() == False :
         return redirect(url_for('login'))
     return "Page de configuration avant la création du QCM (Nom du QCM, Matiere, Nombre de question)"
 
@@ -97,7 +95,7 @@ def config_qcm():
 
 @app.route('/create_QCM')
 def create_qcm():
-    if sessionIsDefine() == False :
+    if session_is_define() == False :
         return redirect(url_for('login'))
     return "Page de création du QCM, ne s'affiche que quand l'on a configurer le QCM"
 
@@ -106,9 +104,16 @@ def create_qcm():
 
 @app.route('/list_qcm')
 def list_qcm():
-    if sessionIsDefine() == False :
+    if session_is_define() == False :
         return redirect(url_for('index'))
-    return "Page de choix des QCM"
+
+    ## Récupèrer une list
+    ## list_xml = [""]
+    list_xml = list_dir("./xml/qcm/", r'(.xml)$')
+    qcm_allow = list_xml_allow("xml/qcm/", list_xml, session['formation'], session['listmatiere'], session['grade'], session['username'])
+    qcm_info = list_xml_info("xml/qcm/", qcm_allow, session['formation'], session['listmatiere'])
+
+    return render_template('list_qcm/index.html', varaible=qcm_info)
 
 
 

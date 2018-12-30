@@ -1,0 +1,15 @@
+<table border=4 cellspacing=4 cellpadding=4 width=80%>
+   <tr>
+       <td>Nom du QCM</td>
+       <td>Formation associé</td>
+       <td>Matiere</td>
+       <td>Auteur</td>
+   </tr>
+   {% for info in varaible %}
+   <tr>
+     {% for qcm in info %}
+        <td>{{ qcm.replace(".xml", "", 1) }}</td>
+     {% endfor %}
+   </tr>
+   {% endfor %}
+</table>

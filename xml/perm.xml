@@ -37,10 +37,17 @@
   <util>
     <nom>FLAUZAC</nom>
     <grade>professeur</grade>
-    <formation>CHPS</formation>
+    <formation>ASR,CHPS</formation>
     <listmatiere>
       <matiere>CHPS0711</matiere>
       <matiere>RT0701</matiere>
+    </listmatiere>
+  </util>
+  <util>
+    <nom>BELLECAVE</nom>
+    <grade>professeur</grade>
+    <formation>ASR,CHPS</formation>
+    <listmatiere>
       <matiere>AN0701</matiere>
     </listmatiere>
   </util>
