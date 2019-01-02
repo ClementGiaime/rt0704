@@ -48,7 +48,7 @@ def request_session(username):
 
 
 #####==================================================================================================#####
-###   Retourne une liste des fichiers du le dossier path et dont les fichers correspondent à la regexp   ###
+###   Retourne une liste des fichiers du le dossier path et dont le nom des fichers correspondent à la regexp   ###
 ###   list = ["qcm-1","qcm-2","qcm-3","qcm-n"]
 def list_dir(path, regexp):
     list = []
