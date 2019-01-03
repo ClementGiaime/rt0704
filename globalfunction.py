@@ -16,8 +16,8 @@ def session_is_define():
 
 #####===================================================================####
 ###   Test si la chaine ne contient que des caractères de la whitelist   ###
-def string_match(string, regexp = r'[A-Za-z0-9]'):
-    return bool(re.compile(regexp).search(string))
+def string_match(string, regexp = r'[A-Za-z0-9]+'):
+    return bool(re.fullmatch(regexp, string))
 
 
 #####===============================================================================#####

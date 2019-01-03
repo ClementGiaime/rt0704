@@ -1,30 +1,4 @@
-from flask import Flask, session, redirect, url_for, escape, request
-from globalfunction import *
+from distutils.core import setup
+import py2exe
 
-app = Flask(__name__)
-
-# Set the secret key to some random bytes. Keep this really secret!
-app.secret_key = 'J84z0UH06f8gy*fg8vHg'
-
-@app.route('/')
-def index():
-    if 'username' in session:
-        return 'Logged in as %s' % escape(session['username'])
-    return 'You are not logged in'
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        session['username'] = request.form['username']
-        return redirect(url_for('index'))
-    show_the_login_form()
-
-
-@app.route('/logout')
-def logout():
-    # remove the username from the session if it's there
-    session.pop('username', None)
-    return redirect(url_for('index'))
-
-if __name__ == '__main__':
-    app.run(debug=True)
+setup(console=['app.py'])

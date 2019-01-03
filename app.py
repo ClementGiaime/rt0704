@@ -76,10 +76,14 @@ def home():
     if session_is_define() == False :
         return redirect(url_for('login'))
 
+    list_xml = list_dir("./xml/qcm/", r'.*(.xml)$')
+    qcm_allow = list_xml_allow("xml/qcm/", list_xml, session['formation'], session['listmatiere'], session['grade'], session['username'])
+    qcm_info = list_xml_info("xml/qcm/", qcm_allow, session['formation'], session['listmatiere'])
+
     if session['grade'] == "etudiant" :
-        return render_template('home/index.html', grade="etudiant", user_info=session)
+        return render_template('home/index.html', grade="etudiant", user_info=session, varaible=qcm_info, listmatiere=session['listmatiere'])
     elif session['grade'] == "professeur" :
-        return render_template('home/index.html', grade="professeur", user_info=session)
+        return render_template('home/index.html', grade="professeur", user_info=session, varaible=qcm_info, listmatiere=session['listmatiere'])
 
 
 
@@ -109,7 +113,7 @@ def list_qcm():
 
     ## Récupèrer une list
     ## list_xml = [""]
-    list_xml = list_dir("./xml/qcm/", r'(.xml)$')
+    list_xml = list_dir("./xml/qcm/", r'.*(.xml)$')
     qcm_allow = list_xml_allow("xml/qcm/", list_xml, session['formation'], session['listmatiere'], session['grade'], session['username'])
     qcm_info = list_xml_info("xml/qcm/", qcm_allow, session['formation'], session['listmatiere'])
 
