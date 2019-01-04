@@ -76,14 +76,28 @@ def home():
     if session_is_define() == False :
         return redirect(url_for('login'))
 
+    try:
+        if request.args["id"] == "" or request.args["id"] == "home":
+            active = "home"
+        elif request.args["id"] == "list_qcm":
+            active = "list_qcm"
+        elif request.args["id"] == "correction_qcm":
+            active = "correction_qcm"
+        elif request.args["id"] == "create_qcm":
+            active = "create_qcm"
+        else:
+            active = "home"
+    except KeyError :
+        active = "home"
+
     list_xml = list_dir("./xml/qcm/", r'.*(.xml)$')
     qcm_allow = list_xml_allow("xml/qcm/", list_xml, session['formation'], session['listmatiere'], session['grade'], session['username'])
     qcm_info = list_xml_info("xml/qcm/", qcm_allow, session['formation'], session['listmatiere'])
 
     if session['grade'] == "etudiant" :
-        return render_template('home/index.html', grade="etudiant", user_info=session, varaible=qcm_info, listmatiere=session['listmatiere'])
+        return render_template('home/index.html', grade="etudiant", user_info=session, varaible=qcm_info, listmatiere=session['listmatiere'], active=active)
     elif session['grade'] == "professeur" :
-        return render_template('home/index.html', grade="professeur", user_info=session, varaible=qcm_info, listmatiere=session['listmatiere'])
+        return render_template('home/index.html', grade="professeur", user_info=session, varaible=qcm_info, listmatiere=session['listmatiere'], active=active)
 
 
 

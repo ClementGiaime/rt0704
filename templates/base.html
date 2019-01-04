@@ -15,6 +15,7 @@
 		<script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 
     <style>
+		/* Bouton view-source */
     	#view-source {
       	position: fixed;
       	display: block;
@@ -24,14 +25,23 @@
       	margin-bottom: 40px;
       	z-index: 900;
     	}
+			/* Bouton faire qcm */
+			#faire-qcm {
+    	}
 
     	.mdl-layout__tab:hover {
       	color: white;
     	}
 
+			/* Taille des block */
 			.mdl-demo section.section--center {
 				max-width: 1000px;
 			}
+
+			.mdl-data-table__cell--non-numeric.mdl-data-table__cell--non-numeric {
+				text-align: center;
+			}
+
     </style>
   </head>
 
@@ -45,15 +55,15 @@
           <h3 class=" mdl-layout__header-row">{{ user_info["username"] }}</h3>
 					<nav class="mdl-navigation">
 						{% if grade == "professeur" %}
-          	<a href="#home" class="mdl-layout__tab is-active">Home</a>
-          	<a href="#list_qcm" class="mdl-layout__tab">Liste des QCM</a>
-          	<a href="#create_qcm" class="mdl-layout__tab">Créer un QCM</a>
+          	<a href="#home" class="mdl-layout__tab {% if active == 'home' %}is-active{% endif %}">Home</a>
+          	<a href="#list_qcm" class="mdl-layout__tab {% if active == 'list_qcm' %}is-active{% endif %}">Liste des QCM</a>
+          	<a href="#create_qcm" class="mdl-layout__tab {% if active == 'create_qcm' %}is-active{% endif %}">Créer un QCM</a>
 						{% endif %}
 
 						{% if grade == "etudiant" %}
-						<a href="#home" class="mdl-layout__tab is-active">Home</a>
-          	<a href="#list_qcm" class="mdl-layout__tab">Liste des QCM</a>
-          	<a href="#correction_qcm" class="mdl-layout__tab">Correction des QCM</a>
+						<a href="#home" class="mdl-layout__tab {% if active == 'home' %}is-active{% endif %}">Home</a>
+          	<a href="#list_qcm" class="mdl-layout__tab {% if active == 'list_qcm' %}is-active{% endif %}">Liste des QCM</a>
+          	<a href="#correction_qcm" class="mdl-layout__tab {% if active == 'correction_qcm' %}is-active{% endif %}">Correction des QCM</a>
 						{% endif %}
         	</nav>
           <!-- Space -->

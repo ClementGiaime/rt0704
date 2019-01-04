@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="mdl-layout__tab-panel is-active" id="home">
+<div class="mdl-layout__tab-panel {% if active == 'home' %}is-active{% endif %}" id="home">
 
 	<!-- Message explicatif de la plateform de QCM -->
 	<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
@@ -47,7 +47,10 @@
 </div>
 
 
-<div class="mdl-layout__tab-panel" id="list_qcm">
+
+
+<!-- Liste des QCM -->
+<div class="mdl-layout__tab-panel {% if active == 'list_qcm' %}is-active{% endif %}" id="list_qcm">
 	<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
 		<div class="mdl-card mdl-cell mdl-cell--12-col">
 			<div class="mdl-card__supporting-text">
@@ -59,6 +62,7 @@
 							<th class="mdl-data-table__cell--non-numeric">Formation associé</th>
 							<th class="mdl-data-table__cell--non-numeric">Matiere</th>
 							<th class="mdl-data-table__cell--non-numeric">Auteur</th>
+							<th></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -67,7 +71,13 @@
  				    {% for qcm in info %}
  				       <td class="mdl-data-table__cell--non-numeric">{{ qcm.replace(".xml", "", 1) }}</td>
  				    {% endfor %}
- 				   </tr>
+						{% if grade == "professeur" %}
+							<td class="mdl-data-table__cell--non-numeric"><a href="/delete_qcm" target="_blank" id="faire-qcm" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--accent mdl-color-text--accent-contrast">Supprimer le QCM</a></td>
+						{% endif %}
+						{% if grade == "etudiant" %}
+							<td class="mdl-data-table__cell--non-numeric"><a href="/faire_qcm" target="_blank" id="faire-qcm" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--accent mdl-color-text--accent-contrast">Faire le QCM</a></td>
+						{% endif %}
+					 </tr>
  				   {% endfor %}
 					</tbody>
 				</table>
