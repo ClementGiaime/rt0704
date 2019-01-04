@@ -111,10 +111,18 @@ def config_qcm():
 
 
 
-@app.route('/create_QCM')
+@app.route('/create_qcm', methods=['GET', 'POST'])
 def create_qcm():
     if session_is_define() == False :
         return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        ## Whitelist
+        if string_match(request.form['qcm_name'], r'[A-Za-z0-9]+') == True and list_string_match(request.form.getlist('qcm_matiere'), r'[A-Z0-9]+') == True and string_match(request.form['qcm_question'], r'[0-9]{1,2}') == True and string_match(request.form['qcm_answer'], r'[0-9]{1}') == True:
+            #print(request.form.getlist('qcm_matiere'))
+            return render_template('create_qcm/index.html', name=request.form['qcm_name'], listmatiere=request.form.getlist('qcm_matiere'), number_question=request.form['qcm_question'], number_awswer=request.form['qcm_answer'])
+        else:
+            return redirect(url_for('home', id="create_qcm"))
     return "Page de création du QCM, ne s'affiche que quand l'on a configurer le QCM"
 
 

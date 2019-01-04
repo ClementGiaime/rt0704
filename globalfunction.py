@@ -20,6 +20,20 @@ def string_match(string, regexp = r'[A-Za-z0-9]+'):
     return bool(re.fullmatch(regexp, string))
 
 
+#####================================================================================================####
+###   Test pour tout les éléments de la liste, si il ne contient que des caractères de la whitelist   ###
+def list_string_match(list, regexp = r'[A-Za-z0-9]+'):
+    ## Si la liste est vide return False
+    if not list:
+        return False
+
+    for string in list:
+        if string_match(string, regexp) == False:
+            return False
+
+    return True
+
+
 #####===============================================================================#####
 ###   Test si l'utilisateur donné existe dans la base de permission xml               ###
 ###   Retourne une liste ["nom","formation","grade",["matiere1","matiere2"...,"matieren"] ]   ###

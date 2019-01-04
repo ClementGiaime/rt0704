@@ -201,7 +201,7 @@ html, body {
 .mdl-demo .mdl-card .mdl-card__supporting-text > h3:first-child {
   margin-bottom: 24px;
 }
-.mdl-demo .mdl-layout__tab-panel:not(#home) .mdl-layout__tab-panel:not(#list_qcm){
+.mdl-demo .mdl-layout__tab-panel:not(#home) .mdl-layout__tab-panel:not(#list_qcm) .mdl-layout__tab-panel:not(#create_qcm) .mdl-layout__tab-panel:not(#correction_qcm){
   background-color: white;
 }
 .mdl-demo #features section {
