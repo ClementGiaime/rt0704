@@ -66,6 +66,7 @@ def logout():
     session.pop('formation', None)
     session.pop('grade', None)
     session.pop('listmatiere', None)
+    session.pop('error', None)
     return redirect(url_for('login'))
 
 
@@ -76,6 +77,22 @@ def home():
     if session_is_define() == False :
         return redirect(url_for('login'))
 
+    ####==================================================================####
+    ## Les variable de session sont utilié pour passé des messages d'erreur ##
+    try:
+        if session['error']:
+            print('SESSION')
+            print(session['error'])
+            error = session['error']
+            session.pop('error', None)
+    except KeyError :
+        error = ""
+
+
+    ####====================================================####
+    ## variable id passé en GET                               ##
+    ## Permet d'afficher la bonne page selon la section voulu ##
+    ## id=list_qcm --> Afficher la liste des QCM              ##
     try:
         if request.args["id"] == "" or request.args["id"] == "home":
             active = "home"
@@ -95,9 +112,9 @@ def home():
     qcm_info = list_xml_info("xml/qcm/", qcm_allow, session['formation'], session['listmatiere'])
 
     if session['grade'] == "etudiant" :
-        return render_template('home/index.html', grade="etudiant", user_info=session, varaible=qcm_info, listmatiere=session['listmatiere'], active=active)
+        return render_template('home/index.html', grade="etudiant", user_info=session, varaible=qcm_info, listmatiere=session['listmatiere'], active=active, error_in_form=error)
     elif session['grade'] == "professeur" :
-        return render_template('home/index.html', grade="professeur", user_info=session, varaible=qcm_info, listmatiere=session['listmatiere'], active=active)
+        return render_template('home/index.html', grade="professeur", user_info=session, varaible=qcm_info, listmatiere=session['listmatiere'], active=active, error_in_form=error)
 
 
 
@@ -117,13 +134,65 @@ def create_qcm():
         return redirect(url_for('login'))
 
     if request.method == 'POST':
-        ## Whitelist
-        if string_match(request.form['qcm_name'], r'[A-Za-z0-9]+') == True and list_string_match(request.form.getlist('qcm_matiere'), r'[A-Z0-9]+') == True and string_match(request.form['qcm_question'], r'[0-9]{1,2}') == True and string_match(request.form['qcm_answer'], r'[0-9]{1}') == True:
-            #print(request.form.getlist('qcm_matiere'))
-            return render_template('create_qcm/index.html', name=request.form['qcm_name'], listmatiere=request.form.getlist('qcm_matiere'), number_question=request.form['qcm_question'], number_awswer=request.form['qcm_answer'])
-        else:
+
+        ####===================================================================================####
+        ##  Vérification de chaque champ du formulaire                                           ##
+        ##  Si un champ n'a pas la bonne syntaxe, initialisation d'un variable de session ERROR  ##
+        ##  Et redirection vers le formulaire de création de qcm                                 ##
+        if string_match(request.form['qcm_name'], r'[A-Za-z0-9-]+') == False:
+            session['error'] = "* Le nom n'est pas conforme"
             return redirect(url_for('home', id="create_qcm"))
-    return "Page de création du QCM, ne s'affiche que quand l'on a configurer le QCM"
+
+        if list_string_match(request.form.getlist('qcm_matiere'), r'[A-Z0-9]+') == False:
+            session['error'] = "* Erreur sur la ou les matières"
+            return redirect(url_for('home', id="create_qcm"))
+
+        if string_match(request.form['qcm_question'], r'[1-9][0-9]?') == False:
+            session['error'] = "* Le nombre de question est trop grand (1 à 99)"
+            return redirect(url_for('home', id="create_qcm"))
+
+        if string_match(request.form['qcm_answer'], r'[1-5]{1}') == False:
+            session['error'] = "* Le nombre de réponse est trop grand (1 à 5)"
+            return redirect(url_for('home', id="create_qcm"))
+
+
+        ####=======================================================================####
+        ##  Vérification du nom du qcm                                               ##
+        ##  Si il existe un déjà un QCM avec le même nom donné dan sle formulaire    ##
+        ##  Redirection vers le formulaire de création de qcm avec message d'erreur  ##
+        list_xml = list_dir("./xml/qcm/", r'.*(.xml)$')
+        name_qcm = request.form['qcm_name'] + ".xml"
+        print(name_qcm)
+        for xml in list_xml:
+            if name_qcm == xml:
+                session['error'] = "* Un QCM possède déja ce nom (" + request.form['qcm_name'] + ")"
+                return redirect(url_for('home', id="create_qcm"))
+
+        question = []
+        for cpt in range(1,int(request.form['qcm_question'])+1) :
+            question.append("Question " + str(cpt))
+
+        answer = []
+        for cpt in range(1,int(request.form['qcm_answer'])+1) :
+            answer.append("Réponse " + str(cpt))
+
+        return render_template('create_qcm/index.html', name=request.form['qcm_name'], listmatiere=request.form.getlist('qcm_matiere'), listquestion=int(request.form['qcm_question']), listawswer=int(request.form['qcm_answer']))
+
+    return redirect(url_for('home'))
+
+
+@app.route('/validate_qcm')
+def validate_qcm():
+    if session_is_define() == False :
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+
+        return redirect(url_for('home' id="list_qcm")))
+    return redirect(url_for('home'))
+
+
+
 
 
 

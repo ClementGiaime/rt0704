@@ -1,3 +1,22 @@
-{% while number_awswer != 0 %}
-<p>QUESTION</p>
-{% endwhile %}
+<h1>Nom du QCM : {{ name }}</h1>
+
+<h2>Associé au matiere :
+{% for matiere in listmatiere %}
+{{ matiere }}
+{% endfor %}
+</h2>
+<form method="post" action="/validate_qcm">
+{% for question in range(1, listquestion + 1) %}
+<h3>Question {{ question }} <input type="text" name="question_{{ question }}"></h3>
+
+  {% for awswer in range(1, listawswer + 1) %}
+  <p>
+    <input type="radio" value="{{ awswer }}" name="question_{{ question }}_awswer" />
+      Réponse {{ awswer }}
+    <input type="text" name="question_{{ question }}_awswer_{{ awswer }}">
+  </p>
+  {% endfor %}
+
+{% endfor %}
+<input type="submit" value="Validation du QCM">
+</form>

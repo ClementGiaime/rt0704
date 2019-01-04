@@ -49,8 +49,9 @@
 
     <div class="demo-layout-waterfall mdl-layout mdl-js-layout">
 
+			<!-- Header -->
       <header class="mdl-layout__header mdl-layout__header--waterfall">
-
+				<!-- Navigation Home-->
         <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
           <h3 class=" mdl-layout__header-row">{{ user_info["username"] }}</h3>
 					<nav class="mdl-navigation">
@@ -69,7 +70,7 @@
           <!-- Space -->
           <div class="mdl-layout-spacer"></div>
 
-					<!-- Navigation -->
+					<!-- Navigation Logout-->
           <nav class="mdl-navigation">
             <a href="/logout" class="mdl-layout__tab">LOGOUT</a>
           </nav>
@@ -77,9 +78,12 @@
 
       </header>
 
+			<!-- Main -->
       <main class="mdl-layout__content">
 				{% block content %}{% endblock %}
 
+
+				<!-- Footer -->
 				<footer class="mdl-mega-footer">
           <div class="mdl-mega-footer--bottom-section">
             <div class="mdl-logo">
