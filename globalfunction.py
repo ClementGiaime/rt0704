@@ -114,3 +114,44 @@ def list_xml_allow(path, list_xml, formation, listmatiere, grade, nom) :
                 list_qcm_allow.append(xml)
 
     return list_qcm_allow
+
+
+
+
+
+####=========================================================================================####
+##  Vérification de chaque champ du formulaire                                                 ##
+##  Si un champ n'a pas la bonne syntaxe, initialisation d'un variable de session ERROR        ##
+##  Et redirection vers le formulaire de création de qcm                                       ##
+##  +                                                                                          ##
+##  Vérifie si la ou les formation et la matiere sont inclu dans les permissions du professeur ##
+def form_allow(name, formation, matiere, question, answer):
+## name = "string", formation = ["ASR","CHPS"], matiere = ["RT0701"], question = "number", answer = "number"
+    if string_match(name, r'[A-Za-z0-9-]+') == False:
+        session['error'] = "* Le nom n'est pas conforme"
+        return False
+
+    ## Compte le nombre de formation
+    number_formation_form = len(formation)
+    ## Compare la liste des formation autorisée et la liste des formation envoyée par le formulaire
+    number_formation_set = len(set(formation) & set(session['formation'].split(",")))
+    ## Si number_formation_set == number_formation_form, cela veut dire que la liste des formation envoyée
+    ## par le formulaire est autorisée pour le professeur
+
+    if list_string_match(formation, r'[A-Z]+') == False or not number_formation_form == number_formation_set:
+        session['error'] = "* Erreur sur la ou les Formation"
+        return False
+
+    if list_string_match(matiere, r'[A-Z0-9]+') == False or not matiere[0] in session['listmatiere']:
+        session['error'] = "* Erreur sur la matière"
+        return False
+
+    if string_match(question, r'[1-9][0-9]?') == False:
+        session['error'] = "* Le nombre de question est trop grand (1 à 99)"
+        return False
+
+    if string_match(answer, r'[1-5]{1}') == False:
+        session['error'] = "* Le nombre de réponse est trop grand (1 à 5)"
+        return False
+
+    return True

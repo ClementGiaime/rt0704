@@ -81,18 +81,17 @@ def home():
     ## Les variable de session sont utilié pour passé des messages d'erreur ##
     try:
         if session['error']:
-            print('SESSION')
-            print(session['error'])
+            #print('SESSION')
+            #print(session['error'])
             error = session['error']
             session.pop('error', None)
     except KeyError :
         error = ""
 
-
     ####====================================================####
     ## variable id passé en GET                               ##
     ## Permet d'afficher la bonne page selon la section voulu ##
-    ## id=list_qcm --> Afficher la liste des QCM              ##
+    ## /home?id=list_qcm --> Afficher la liste des QCM        ##
     try:
         if request.args["id"] == "" or request.args["id"] == "home":
             active = "home"
@@ -130,44 +129,17 @@ def config_qcm():
 
 @app.route('/create_qcm', methods=['GET', 'POST'])
 def create_qcm():
-    if session_is_define() == False :
+    if session_is_define() == False:
         return redirect(url_for('login'))
 
     if request.method == 'POST':
 
-        print(request.form['qcm_name'])
-        print(request.form.getlist('qcm_formation'))
-        print(request.form.getlist('qcm_matiere'))
-        print(request.form['qcm_question'])
-        print(request.form['qcm_answer'])
-
-        ####===================================================================================####
-        ##  Vérification de chaque champ du formulaire                                           ##
-        ##  Si un champ n'a pas la bonne syntaxe, initialisation d'un variable de session ERROR  ##
-        ##  Et redirection vers le formulaire de création de qcm                                 ##
-        if string_match(request.form['qcm_name'], r'[A-Za-z0-9-]+') == False:
-            session['error'] = "* Le nom n'est pas conforme"
+        ####==========================================================================================####
+        ##  Vérification de chaque champ du formulaire                                                  ##
+        ##  Vérifie si la ou les formation et la matiere sont inclu dans les permissions du professeur  ##
+        if form_allow(request.form['qcm_name'], request.form.getlist('qcm_formation'), request.form.getlist('qcm_matiere'), request.form['qcm_question'], request.form['qcm_answer']) == False:
             return redirect(url_for('home', id="create_qcm"))
 
-        if list_string_match(request.form.getlist('qcm_formation'), r'[A-Z]+') == False:
-            session['error'] = "* Erreur sur la ou les Formation"
-            return redirect(url_for('home', id="create_qcm"))
-
-
-        if list_string_match(request.form.getlist('qcm_matiere'), r'[A-Z0-9]+') == False:
-            session['error'] = "* Erreur sur la matière"
-            return redirect(url_for('home', id="create_qcm"))
-
-        if string_match(request.form['qcm_question'], r'[1-9][0-9]?') == False:
-            session['error'] = "* Le nombre de question est trop grand (1 à 99)"
-            return redirect(url_for('home', id="create_qcm"))
-
-        if string_match(request.form['qcm_answer'], r'[1-5]{1}') == False:
-            session['error'] = "* Le nombre de réponse est trop grand (1 à 5)"
-            return redirect(url_for('home', id="create_qcm"))
-
-        ##Vérifier si la formation correspond
-        ##Vérifier si la matiere correspond
 
         ####=======================================================================####
         ##  Vérification du nom du qcm                                               ##
@@ -187,13 +159,53 @@ def create_qcm():
 
 
 
-@app.route('/validate_qcm')
+@app.route('/validate_qcm', methods=['GET', 'POST'])
 def validate_qcm():
     if session_is_define() == False :
         return redirect(url_for('login'))
 
     if request.method == 'POST':
 
+        ####==========================================================================================####
+        ##  Vérification de chaque champ du formulaire                                                  ##
+        ##  Vérifie si la ou les formation et la matiere sont inclu dans les permissions du professeur  ##
+        if form_allow(request.form['name'], request.form['formation'].split(","), request.form.getlist('matiere'), request.form['number_question'], request.form['number_awswer']) == False:
+            return redirect(url_for('home', id="create_qcm"))
+
+        ####=======================================================================####
+        ##  Vérification du nom du qcm                                               ##
+        ##  Si il existe un déjà un QCM avec le même nom donné dan sle formulaire    ##
+        ##  Redirection vers le formulaire de création de qcm avec message d'erreur  ##
+        list_xml = list_dir("./xml/qcm/", r'.*(.xml)$')
+        name_qcm = request.form['name'] + ".xml"
+        print(name_qcm)
+        for xml in list_xml:
+            if name_qcm == xml:
+                session['error'] = "* Un QCM possède déja ce nom (" + request.form['name'] + ")"
+                return redirect(url_for('home', id="create_qcm"))
+
+
+        ## Vérification de chaque question et de chaque réponse
+        qcm = etree.Element('QCM')
+        etree.SubElement(qcm, 'nom').text = request.form['name']
+        etree.SubElement(qcm, 'formation').text = request.form['formation']
+        etree.SubElement(qcm, 'matiere').text = request.form['matiere']
+        etree.SubElement(qcm, 'auteur').text = session['username']
+        contenu = etree.SubElement(qcm, 'contenu')
+        for number_question in range(1, int(request.form['number_question']) + 1):
+            question = etree.SubElement(contenu, 'question', num=str(number_question))
+            form_number_question = "question_" + str(number_question)
+            etree.SubElement(question, 'intitule').text = request.form[form_number_question]
+
+            reponses = etree.SubElement(question, 'reponses')
+            for number_awswer in range(1, int(request.form['number_awswer']) + 1):
+                form_number_awswer = "question_" + str(number_question) + "_awswer_" + str(number_awswer)
+                etree.SubElement(reponses, 'reponse', id=str(number_awswer)).text = request.form[form_number_awswer]
+
+        #print(etree.tostring(qcm, pretty_print=True))
+        document_xml = etree.ElementTree(qcm)
+        name_of_qcm = "./xml/qcm/" + request.form['name'] + ".xml"
+        document_xml.write(name_of_qcm)
 
         return redirect(url_for('home', id="list_qcm"))
     return redirect(url_for('home'))

@@ -1,3 +1,4 @@
+<form method="post" action="/validate_qcm">
 <h1>Nom du QCM : {{ name }}</h1>
 <input type='hidden' name='name' value='{{ name }}'>
 
@@ -12,7 +13,6 @@
 <input type='hidden' name='matiere' value='{{ matiere }}'>
 </h2>
 
-<form method="post" action="/validate_qcm">
 {% for question in range(1, listquestion + 1) %}
 <h3>Question {{ question }} <input type="text" name="question_{{ question }}"></h3>
 
