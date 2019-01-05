@@ -147,11 +147,11 @@ def form_allow(name, formation, matiere, question, answer):
         return False
 
     if string_match(question, r'[1-9][0-9]?') == False:
-        session['error'] = "* Le nombre de question est trop grand (1 à 99)"
+        session['error'] = "* Le nombre de question de 1 à 99)"
         return False
 
-    if string_match(answer, r'[1-5]{1}') == False:
-        session['error'] = "* Le nombre de réponse est trop grand (1 à 5)"
+    if string_match(answer, r'[1-9]{1}') == False:
+        session['error'] = "* Le nombre de réponse de 1 à 9 par question"
         return False
 
     return True

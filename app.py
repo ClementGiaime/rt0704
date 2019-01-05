@@ -185,27 +185,68 @@ def validate_qcm():
                 return redirect(url_for('home', id="create_qcm"))
 
 
-        ## Vérification de chaque question et de chaque réponse
+
+
+        ## <QCM>
         qcm = etree.Element('QCM')
+        qcm_correction = etree.Element('QCMCorrection')
+        ## <nom>Nom du QCM</nom>
         etree.SubElement(qcm, 'nom').text = request.form['name']
+        etree.SubElement(qcm_correction, 'nom').text = request.form['name']
+        ## <formation>ASR</formation>
         etree.SubElement(qcm, 'formation').text = request.form['formation']
+        ## <matiere>RT0701</matiere>
         etree.SubElement(qcm, 'matiere').text = request.form['matiere']
+        ## <auteur>FLAUZAC</auteur>
         etree.SubElement(qcm, 'auteur').text = session['username']
+
+        ## <contenu>
+        ## </contenu>
         contenu = etree.SubElement(qcm, 'contenu')
+        correction = etree.SubElement(qcm_correction, 'correction')
+
         for number_question in range(1, int(request.form['number_question']) + 1):
+            ## <intitule>
+            ## Vérification de chaque question
             question = etree.SubElement(contenu, 'question', num=str(number_question))
             form_number_question = "question_" + str(number_question)
+            if string_match(request.form[form_number_question], r'[A-Za-z0-9 ?_-]+') == False:
+                session['error'] = "* ERREUR - La question numéro " + str(number_question) + " possède un ou des caractères incorrectes"
+                return redirect(url_for('home', id="create_qcm"))
+
             etree.SubElement(question, 'intitule').text = request.form[form_number_question]
 
+            ## <correction>
+            ## Vérification de la valeur de bouton radio
+            form_value_awswer = form_number_question + "_awswer"
+            regexp_value_awswer = "[1-" + str(request.form['number_question']) + "]"
+            try:
+                if string_match(request.form[form_value_awswer], regexp_value_awswer) == False:
+                    session['error'] = "* ERREUR - au moins une réponse par question doit étre validée"
+                    return redirect(url_for('home', id="create_qcm"))
+            except KeyError :
+                session['error'] = "* ERREUR - au moins une réponse par question doit étre validée"
+                return redirect(url_for('home', id="create_qcm"))
+            etree.SubElement(correction, 'question', num=str(number_question), id=request.form[form_value_awswer])
+
+            ## <reponses>
             reponses = etree.SubElement(question, 'reponses')
             for number_awswer in range(1, int(request.form['number_awswer']) + 1):
+                ## Vérification de chaque réponse
                 form_number_awswer = "question_" + str(number_question) + "_awswer_" + str(number_awswer)
+                if string_match(request.form[form_number_awswer], r'[A-Za-z0-9 _?]+') == False:
+                    session['error'] = "* ERREUR - La réponse numéro " + str(number_awswer) + " de la question numéro " + str(number_question) + " possède un ou des caractères incorrectes"
+                    return redirect(url_for('home', id="create_qcm"))
                 etree.SubElement(reponses, 'reponse', id=str(number_awswer)).text = request.form[form_number_awswer]
 
-        #print(etree.tostring(qcm, pretty_print=True))
         document_xml = etree.ElementTree(qcm)
+        document_xml_correction = etree.ElementTree(qcm_correction)
+
         name_of_qcm = "./xml/qcm/" + request.form['name'] + ".xml"
+        name_of_qcm_correction = "./xml/correction/" + request.form['name'] + ".xml"
+
         document_xml.write(name_of_qcm)
+        document_xml_correction.write(name_of_qcm_correction)
 
         return redirect(url_for('home', id="list_qcm"))
     return redirect(url_for('home'))
