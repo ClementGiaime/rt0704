@@ -105,8 +105,13 @@
 
    				<p><label>Nom du QCM</label> : <input type="text" name="qcm_name"></p>
 					<p><label>Formation</label> :
+						{% for formation in listformation %}
+						<input type="checkbox" name="qcm_formation" value="{{ formation }}">{{ formation }}
+						{% endfor %}
+					</p>
+					<p><label>Matière</label> :
 						{% for matiere in session['listmatiere'] %}
-						<input type="checkbox" name="qcm_matiere" value="{{ matiere }}">{{ matiere }}
+						<input type="radio" name="qcm_matiere" value="{{ matiere }}">{{ matiere }}
 						{% endfor %}
 					</p>
 

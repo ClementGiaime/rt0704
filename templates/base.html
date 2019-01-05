@@ -53,7 +53,7 @@
       <header class="mdl-layout__header mdl-layout__header--waterfall">
 				<!-- Navigation Home-->
         <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
-          <h3 class=" mdl-layout__header-row">{{ user_info["username"] }}</h3>
+          <h3 class=" mdl-layout__header-row">{{ session["username"] }}</h3>
 					<nav class="mdl-navigation">
 						{% if grade == "professeur" %}
           	<a href="#home" class="mdl-layout__tab {% if active == 'home' %}is-active{% endif %}">Home</a>

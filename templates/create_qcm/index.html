@@ -1,10 +1,17 @@
 <h1>Nom du QCM : {{ name }}</h1>
+<input type='hidden' name='name' value='{{ name }}'>
 
-<h2>Associé au matiere :
-{% for matiere in listmatiere %}
-{{ matiere }}
-{% endfor %}
+<input type='hidden' name='number_question' value='{{ listquestion }}'>
+<input type='hidden' name='number_awswer' value='{{ listawswer }}'>
+<h2>Associé au formation :
+{{ listformation }}
+<input type='hidden' name='formation' value='{{ listformation }}'>
 </h2>
+<h2>Associé à la matière :
+{{ matiere }}
+<input type='hidden' name='matiere' value='{{ matiere }}'>
+</h2>
+
 <form method="post" action="/validate_qcm">
 {% for question in range(1, listquestion + 1) %}
 <h3>Question {{ question }} <input type="text" name="question_{{ question }}"></h3>
