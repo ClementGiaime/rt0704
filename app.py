@@ -253,10 +253,6 @@ def validate_qcm():
 
 
 
-
-
-
-
 @app.route('/list_qcm')
 def list_qcm():
     if session_is_define() == False :
@@ -270,6 +266,73 @@ def list_qcm():
 
     return render_template('list_qcm/index.html', varaible=qcm_info)
 
+
+
+
+@app.route('/delete_qcm')
+def delete_qcm():
+    if session_is_define() == False :
+        return redirect(url_for('login'))
+
+    ####=====================================================================####
+    ##  Vérifie si l'argument ?ref= existe                                     ##
+    ##  Si il existe, test si la référence contient des caractères incorrecte  ##
+    try:
+        if string_match(request.args['ref'], r'[A-Za-z0-9-]+') == False :
+            return "ERROR - La référence possède un ou des caractères incorrecte"
+            return redirect(url_for('home', id="list_qcm"))
+    except KeyError :
+        return "ERREUR - La référence du QCM n'existe pas"
+        return redirect(url_for('home', id="list_qcm"))
+
+    ####============================================####
+    ##  Vérifie si le QCM appartient à l'utilisateur  ##
+    list_xml = list_dir("./xml/qcm/", r'.*(.xml)$')
+    qcm_allow = list_xml_allow("xml/qcm/", list_xml, session['formation'], session['listmatiere'], session['grade'], session['username'])
+
+    qcm = request.args['ref'] + ".xml"
+
+    if qcm in qcm_allow:
+        remove_file("./xml/qcm/", qcm)
+        remove_file("./xml/correction/", qcm)
+        return "OK"
+        return redirect(url_for('home', id="list_qcm"))
+    else:
+        return "ERROR - Le QCM n'existe pas ou tu n'as pas les droits le supprimer"
+        return redirect(url_for('home', id="list_qcm"))
+
+
+
+
+@app.route('/faire_qcm')
+def faire_qcm():
+    if session_is_define() == False :
+        return redirect(url_for('login'))
+
+    ####=====================================================================####
+    ##  Vérifie si l'argument ?ref= existe                                     ##
+    ##  Si il existe, test si la référence contient des caractères incorrecte  ##
+    try:
+        if string_match(request.args['ref'], r'[A-Za-z0-9-]+') == False :
+            return "ERROR - La référence possède un ou des caractères incorrecte"
+            return redirect(url_for('home', id="list_qcm"))
+    except KeyError :
+        return "ERREUR - La référence du QCM n'existe pas"
+        return redirect(url_for('home', id="list_qcm"))
+
+    ####============================================####
+    ##  Vérifie si le QCM appartient à l'utilisateur  ##
+    list_xml = list_dir("./xml/qcm/", r'.*(.xml)$')
+    qcm_allow = list_xml_allow("xml/qcm/", list_xml, session['formation'], session['listmatiere'], session['grade'], session['username'])
+
+    qcm = request.args['ref'] + ".xml"
+
+    if qcm in qcm_allow:
+        return "OK"
+        return redirect(url_for('home', id="list_qcm"))
+    else:
+        return "ERROR - Le QCM n'existe pas ou tu n'as pas les droits nécéssaire pour le faire"
+        return redirect(url_for('home', id="list_qcm"))
 
 
 

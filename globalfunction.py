@@ -2,7 +2,7 @@
 from flask import Flask, session, redirect, url_for, escape, request, render_template
 import re
 from lxml import etree
-from os import listdir
+from os import listdir, remove
 
 
 #####=======================================================================================####
@@ -154,4 +154,9 @@ def form_allow(name, formation, matiere, question, answer):
         session['error'] = "* Le nombre de réponse de 1 à 9 par question"
         return False
 
+    return True
+
+def remove_file(path, qcm):
+    path_file = path + qcm
+    remove(path_file)
     return True

@@ -78,10 +78,10 @@
  				       <td class="mdl-data-table__cell--non-numeric">{{ qcm.replace(".xml", "", 1) }}</td>
  				    {% endfor %}
 						{% if grade == "professeur" %}
-							<td class="mdl-data-table__cell--non-numeric"><a href="/delete_qcm" target="_blank" id="faire-qcm" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--accent mdl-color-text--accent-contrast">Supprimer le QCM</a></td>
+							<td class="mdl-data-table__cell--non-numeric"><a href="/delete_qcm?ref={{ info[0].replace(".xml", "", 1) }}" id="faire-qcm" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--accent mdl-color-text--accent-contrast">Supprimer le QCM</a></td>
 						{% endif %}
 						{% if grade == "etudiant" %}
-							<td class="mdl-data-table__cell--non-numeric"><a href="/faire_qcm" target="_blank" id="faire-qcm" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--accent mdl-color-text--accent-contrast">Faire le QCM</a></td>
+							<td class="mdl-data-table__cell--non-numeric"><a href="/faire_qcm?ref={{ info[0].replace(".xml", "", 1) }}" id="faire-qcm" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--accent mdl-color-text--accent-contrast">Faire le QCM</a></td>
 						{% endif %}
 					 </tr>
  				   {% endfor %}
