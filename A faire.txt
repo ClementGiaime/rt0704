@@ -1,0 +1,10 @@
+A faire pour le QCM :
+
+Ficher de configuration
+Correction du QCM
+Optimisation de /faire_qcm /correction_qcm /delete_qcm
+Optimisation de XPATH
+Modification des variables GET et POST en request.form.get('ref')
+Commentaire du code
+Changement des nom de variables
+Gestion des erreurs avec la session['error']

@@ -156,6 +156,40 @@ def form_allow(name, formation, matiere, question, answer):
 
     return True
 
+def qcm_list_question_anwser(path, qcm):
+    ## List = [ [ ["number","Question 1"],[ ["number","Réponse 1" ], ["number","Réponse 2" ] ] ],
+    ##        [ [ ["number","Question 2"],[ ["number","Réponse 1" ], ["number","Réponse 2" ] ] ] ]
+    list_question_anwser = []
+    path_qcm = path + qcm
+
+    tree = etree.parse(path_qcm)
+    number_of_question = int(tree.xpath("count(/QCM/contenu/question)"))
+    print("Number of question : " + str(number_of_question))
+
+    for number in range(1, number_of_question+1):
+        list_temp = []
+        ## Nom de la Question
+        xurl = "/QCM/contenu/question[@num=" + str(number) + "]/intitule"
+        intitule = [ number, tree.xpath(xurl)[0].text ]
+
+        xurl = "count(/QCM/contenu/question[@num=" + str(number) + "]/reponses/reponse)"
+        number_of_anwser = int(tree.xpath(xurl))
+        print("Number of anwser : " + str(number_of_anwser))
+
+
+        for cpt in range(1, number_of_anwser+1):
+            ## Nom de la réponse
+            xurl = "/QCM/contenu/question[@num=" + str(number) + "]/reponses/reponse[@id=" + str(cpt) + "]"
+            reponse = [ cpt, tree.xpath(xurl)[0].text ]
+            list_temp.append(reponse)
+
+        question_anwser = [ intitule, list_temp ]
+        list_question_anwser.append(question_anwser)
+
+    print(list_question_anwser)
+    return list_question_anwser
+
+
 def remove_file(path, qcm):
     path_file = path + qcm
     remove(path_file)

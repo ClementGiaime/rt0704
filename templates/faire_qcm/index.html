@@ -1,0 +1,9 @@
+<form method="post" action="/correction_qcm?ref={{ name_qcm }}">
+{% for question in list %}
+<h3>Question {{ question[0][0] }} - {{ question[0][1] }}</h3>
+  {% for anwser in question[1] %}
+  <p><input type="radio" value="{{ anwser[0] }}" name="question_{{ question[0][0] }}_awswer" />{{ anwser[0] }} - {{ anwser[1] }}</p>
+  {% endfor %}
+{% endfor %}
+<input type="submit" value="Correction du QCM">
+</form>
