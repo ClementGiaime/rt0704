@@ -3,6 +3,7 @@ from flask import Flask, session, redirect, url_for, escape, request, render_tem
 import re
 from lxml import etree
 from os import listdir, remove
+from conf import *
 
 
 #####=======================================================================================####
@@ -117,8 +118,6 @@ def list_xml_allow(path, list_xml, formation, listmatiere, grade, nom) :
 
 
 
-
-
 ####=========================================================================================####
 ##  Vérification de chaque champ du formulaire                                                 ##
 ##  Si un champ n'a pas la bonne syntaxe, initialisation d'un variable de session ERROR        ##
@@ -127,7 +126,7 @@ def list_xml_allow(path, list_xml, formation, listmatiere, grade, nom) :
 ##  Vérifie si la ou les formation et la matiere sont inclu dans les permissions du professeur ##
 def form_allow(name, formation, matiere, question, answer):
 ## name = "string", formation = ["ASR","CHPS"], matiere = ["RT0701"], question = "number", answer = "number"
-    if string_match(name, r'[A-Za-z0-9-]+') == False:
+    if string_match(name, REGEXP_NAME_QCM) == False:
         session['error'] = "* Le nom n'est pas conforme"
         return False
 
@@ -138,23 +137,27 @@ def form_allow(name, formation, matiere, question, answer):
     ## Si number_formation_set == number_formation_form, cela veut dire que la liste des formation envoyée
     ## par le formulaire est autorisée pour le professeur
 
-    if list_string_match(formation, r'[A-Z]+') == False or not number_formation_form == number_formation_set:
+    if list_string_match(formation, REGEXP_NAME_FORMATION) == False or not number_formation_form == number_formation_set:
         session['error'] = "* Erreur sur la ou les Formation"
         return False
 
-    if list_string_match(matiere, r'[A-Z0-9]+') == False or not matiere[0] in session['listmatiere']:
+    if list_string_match(matiere, REGEXP_NAME_MATIERE) == False or not matiere[0] in session['listmatiere']:
         session['error'] = "* Erreur sur la matière"
         return False
 
-    if string_match(question, r'[1-9][0-9]?') == False:
+    if string_match(question, REGEXP_NUMBER_QUESTION) == False:
         session['error'] = "* Le nombre de question de 1 à 99)"
         return False
 
-    if string_match(answer, r'[1-9]{1}') == False:
+    if string_match(answer, REGEXP_NUMBER_ANSWER) == False:
         session['error'] = "* Le nombre de réponse de 1 à 9 par question"
         return False
 
     return True
+
+
+
+
 
 def qcm_list_question_anwser(path, qcm):
     ## List = [ [ ["number","Question 1"],[ ["number","Réponse 1" ], ["number","Réponse 2" ] ] ],

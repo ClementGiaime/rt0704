@@ -1,11 +1,12 @@
 # -*- coding:utf-8 -*-
 from flask import Flask, session, redirect, url_for, escape, request, render_template
 from globalfunction import *
+from conf import *
 
 app = Flask(__name__)
 
 # Set the secret key to some random bytes.
-app.secret_key = 'J84z0UH06f8gy*fg8vHg'
+app.secret_key = SECRET_KEY_APP
 
 
 
@@ -23,6 +24,14 @@ def index():
 
 
 
+'''
+  _                _
+ | |    ___   __ _(_)_ __
+ | |   / _ \ / _` | | '_ \
+ | |__| (_) | (_| | | | | |
+ |_____\___/ \__, |_|_| |_|
+             |___/
+'''
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     #####=========================================================####
@@ -34,7 +43,7 @@ def login():
     ###   Création d'un session si l'utilisateur est valide   ###
     if request.method == 'POST':
         ## Whitelist
-        if string_match(request.form['username']) == True :
+        if string_match(request.form.get('username')) == True :
 
             ## Requet sur le fichier XML
             ## list_info_user = ["nom","formation","grade",["matiere1","matiere2"...,"matieren"] ]
@@ -58,7 +67,14 @@ def login():
 
 
 
-
+'''
+  _                         _
+ | | ___   __ _  ___  _   _| |_
+ | |/ _ \ / _` |/ _ \| | | | __|
+ | | (_) | (_| | (_) | |_| | |_
+ |_|\___/ \__, |\___/ \__,_|\__|
+          |___/
+'''
 @app.route('/logout')
 def logout():
     # remove the username from the session if it's there
@@ -70,8 +86,14 @@ def logout():
     return redirect(url_for('login'))
 
 
+'''
+  _
+ | |__   ___  _ __ ___   ___
+ | '_ \ / _ \| '_ ` _ \ / _ \
+ | | | | (_) | | | | | |  __/
+ |_| |_|\___/|_| |_| |_|\___|
 
-
+'''
 @app.route('/home')
 def home():
     if session_is_define() == False :
@@ -81,8 +103,6 @@ def home():
     ## Les variable de session sont utilié pour passé des messages d'erreur ##
     try:
         if session['error']:
-            #print('SESSION')
-            #print(session['error'])
             error = session['error']
             session.pop('error', None)
     except KeyError :
@@ -92,23 +112,20 @@ def home():
     ## variable id passé en GET                               ##
     ## Permet d'afficher la bonne page selon la section voulu ##
     ## /home?id=list_qcm --> Afficher la liste des QCM        ##
-    try:
-        if request.args["id"] == "" or request.args["id"] == "home":
-            active = "home"
-        elif request.args["id"] == "list_qcm":
-            active = "list_qcm"
-        elif request.args["id"] == "correction_qcm":
-            active = "correction_qcm"
-        elif request.args["id"] == "create_qcm":
-            active = "create_qcm"
-        else:
-            active = "home"
-    except KeyError :
+    if request.args.get('id') == "" or request.args.get('id') == "home" or request.args.get('id') is None:
         active = "home"
+    elif request.args.get('id') == "list_qcm":
+        active = "list_qcm"
+    elif request.args.get('id') == "correction_qcm":
+        active = "correction_qcm"
+    elif request.args.get('id') == "create_qcm":
+        active = "create_qcm"
+    else:
+        return redirect(url_for('home'))
 
-    list_xml = list_dir("./xml/qcm/", r'.*(.xml)$')
-    qcm_allow = list_xml_allow("xml/qcm/", list_xml, session['formation'], session['listmatiere'], session['grade'], session['username'])
-    qcm_info = list_xml_info("xml/qcm/", qcm_allow, session['formation'], session['listmatiere'])
+    list_xml = list_dir(PATH_QCM, r'.*(.xml)$')
+    qcm_allow = list_xml_allow(PATH_QCM, list_xml, session['formation'], session['listmatiere'], session['grade'], session['username'])
+    qcm_info = list_xml_info(PATH_QCM, qcm_allow, session['formation'], session['listmatiere'])
 
     if session['grade'] == "etudiant" :
         return render_template('home/index.html', grade="etudiant", user_info=session, varaible=qcm_info, listmatiere=session['listmatiere'], active=active, error_in_form=error)
@@ -116,17 +133,14 @@ def home():
         return render_template('home/index.html', grade="professeur", listformation=session['formation'].split(","), varaible=qcm_info, listmatiere=session['listmatiere'], active=active, error_in_form=error)
 
 
-
-
-@app.route('/config_QCM')
-def config_qcm():
-    if session_is_define() == False :
-        return redirect(url_for('login'))
-    return "Page de configuration avant la création du QCM (Nom du QCM, Matiere, Nombre de question)"
-
-
-
-
+'''
+                      _
+   ___ _ __ ___  __ _| |_ ___     __ _  ___ _ __ ___
+  / __| '__/ _ \/ _` | __/ _ \   / _` |/ __| '_ ` _ \
+ | (__| | |  __/ (_| | ||  __/  | (_| | (__| | | | | |
+  \___|_|  \___|\__,_|\__\___|___\__, |\___|_| |_| |_|
+                            |_____| |_|
+'''
 @app.route('/create_qcm', methods=['GET', 'POST'])
 def create_qcm():
     if session_is_define() == False:
@@ -134,6 +148,8 @@ def create_qcm():
 
     if request.method == 'POST':
 
+        if request.form.get('qcm_name') is None or request.form.get('qcm_question') is None or request.form.get('qcm_answer') is None:
+            return redirect(url_for('home', id="create_qcm"))
         ####==========================================================================================####
         ##  Vérification de chaque champ du formulaire                                                  ##
         ##  Vérifie si la ou les formation et la matiere sont inclu dans les permissions du professeur  ##
@@ -145,7 +161,7 @@ def create_qcm():
         ##  Vérification du nom du qcm                                               ##
         ##  Si il existe un déjà un QCM avec le même nom donné dan sle formulaire    ##
         ##  Redirection vers le formulaire de création de qcm avec message d'erreur  ##
-        list_xml = list_dir("./xml/qcm/", r'.*(.xml)$')
+        list_xml = list_dir(PATH_QCM, r'.*(.xml)$')
         name_qcm = request.form['qcm_name'] + ".xml"
         print(name_qcm)
         for xml in list_xml:
@@ -158,7 +174,14 @@ def create_qcm():
     return redirect(url_for('home'))
 
 
-
+'''
+             _ _     _       _
+ __   ____ _| (_) __| | __ _| |_ ___     __ _  ___ _ __ ___
+ \ \ / / _` | | |/ _` |/ _` | __/ _ \   / _` |/ __| '_ ` _ \
+  \ V / (_| | | | (_| | (_| | ||  __/  | (_| | (__| | | | | |
+   \_/ \__,_|_|_|\__,_|\__,_|\__\___|___\__, |\___|_| |_| |_|
+                                   |_____| |_|
+'''
 @app.route('/validate_qcm', methods=['GET', 'POST'])
 def validate_qcm():
     if session_is_define() == False :
@@ -166,6 +189,8 @@ def validate_qcm():
 
     if request.method == 'POST':
 
+        if request.form.get('name') is None or request.form.get('formation') is None or request.form.get('number_question') is None or  request.form.get('number_awswer') is None :
+            return redirect(url_for('home', id="create_qcm"))
         ####==========================================================================================####
         ##  Vérification de chaque champ du formulaire                                                  ##
         ##  Vérifie si la ou les formation et la matiere sont inclu dans les permissions du professeur  ##
@@ -176,7 +201,7 @@ def validate_qcm():
         ##  Vérification du nom du qcm                                               ##
         ##  Si il existe un déjà un QCM avec le même nom donné dan sle formulaire    ##
         ##  Redirection vers le formulaire de création de qcm avec message d'erreur  ##
-        list_xml = list_dir("./xml/qcm/", r'.*(.xml)$')
+        list_xml = list_dir(PATH_QCM, r'.*(.xml)$')
         name_qcm = request.form['name'] + ".xml"
         print(name_qcm)
         for xml in list_xml:
@@ -210,7 +235,7 @@ def validate_qcm():
             ## Vérification de chaque question
             question = etree.SubElement(contenu, 'question', num=str(number_question))
             form_number_question = "question_" + str(number_question)
-            if string_match(request.form[form_number_question], r'[A-Za-z0-9 ?_-]+') == False:
+            if string_match(request.form[form_number_question], REGEXP_INPUT_QUESTION) == False:
                 session['error'] = "* ERREUR - La question numéro " + str(number_question) + " possède un ou des caractères incorrectes"
                 return redirect(url_for('home', id="create_qcm"))
 
@@ -234,7 +259,7 @@ def validate_qcm():
             for number_awswer in range(1, int(request.form['number_awswer']) + 1):
                 ## Vérification de chaque réponse
                 form_number_awswer = "question_" + str(number_question) + "_awswer_" + str(number_awswer)
-                if string_match(request.form[form_number_awswer], r'[A-Za-z0-9 _?]+') == False:
+                if string_match(request.form[form_number_awswer], REGEXP_INPUT_ANSWER) == False:
                     session['error'] = "* ERREUR - La réponse numéro " + str(number_awswer) + " de la question numéro " + str(number_question) + " possède un ou des caractères incorrectes"
                     return redirect(url_for('home', id="create_qcm"))
                 etree.SubElement(reponses, 'reponse', id=str(number_awswer)).text = request.form[form_number_awswer]
@@ -242,8 +267,8 @@ def validate_qcm():
         document_xml = etree.ElementTree(qcm)
         document_xml_correction = etree.ElementTree(qcm_correction)
 
-        name_of_qcm = "./xml/qcm/" + request.form['name'] + ".xml"
-        name_of_qcm_correction = "./xml/correction/" + request.form['name'] + ".xml"
+        name_of_qcm = PATH_QCM + request.form['name'] + ".xml"
+        name_of_qcm_correction = PATH_QCM_CORRECTION + request.form['name'] + ".xml"
 
         document_xml.write(name_of_qcm)
         document_xml_correction.write(name_of_qcm_correction)
@@ -260,9 +285,9 @@ def list_qcm():
 
     ## Récupèrer une list
     ## list_xml = [""]
-    list_xml = list_dir("./xml/qcm/", r'.*(.xml)$')
-    qcm_allow = list_xml_allow("xml/qcm/", list_xml, session['formation'], session['listmatiere'], session['grade'], session['username'])
-    qcm_info = list_xml_info("xml/qcm/", qcm_allow, session['formation'], session['listmatiere'])
+    list_xml = list_dir(PATH_QCM, r'.*(.xml)$')
+    qcm_allow = list_xml_allow(PATH_QCM, list_xml, session['formation'], session['listmatiere'], session['grade'], session['username'])
+    qcm_info = list_xml_info(PATH_QCM, qcm_allow, session['formation'], session['listmatiere'])
 
     return render_template('list_qcm/index.html', varaible=qcm_info)
 
@@ -278,7 +303,7 @@ def delete_qcm():
     ##  Vérifie si l'argument ?ref= existe                                     ##
     ##  Si il existe, test si la référence contient des caractères incorrecte  ##
     try:
-        if string_match(request.args['ref'], r'[A-Za-z0-9-]+') == False :
+        if string_match(request.args['ref'], REGEXP_NAME_QCM) == False :
             return "ERROR - La référence possède un ou des caractères incorrecte"
             return redirect(url_for('home', id="list_qcm"))
     except KeyError :
@@ -287,14 +312,14 @@ def delete_qcm():
 
     ####============================================####
     ##  Vérifie si le QCM appartient à l'utilisateur  ##
-    list_xml = list_dir("./xml/qcm/", r'.*(.xml)$')
-    qcm_allow = list_xml_allow("xml/qcm/", list_xml, session['formation'], session['listmatiere'], session['grade'], session['username'])
+    list_xml = list_dir(PATH_QCM, r'.*(.xml)$')
+    qcm_allow = list_xml_allow(PATH_QCM, list_xml, session['formation'], session['listmatiere'], session['grade'], session['username'])
 
     qcm = request.args['ref'] + ".xml"
 
     if qcm in qcm_allow:
-        remove_file("./xml/qcm/", qcm)
-        remove_file("./xml/correction/", qcm)
+        remove_file(PATH_QCM, qcm)
+        remove_file(PATH_QCM_CORRECTION, qcm)
         return "OK"
         return redirect(url_for('home', id="list_qcm"))
     else:
@@ -313,7 +338,7 @@ def faire_qcm():
     ##  Vérifie si l'argument ?ref= existe                                     ##
     ##  Si il existe, test si la référence contient des caractères incorrecte  ##
     try:
-        if string_match(request.args['ref'], r'[A-Za-z0-9-]+') == False :
+        if string_match(request.args['ref'], REGEXP_NAME_QCM) == False :
             return "ERROR - La référence possède un ou des caractères incorrecte"
             return redirect(url_for('home', id="list_qcm"))
     except KeyError :
@@ -322,8 +347,8 @@ def faire_qcm():
 
     ####====================================================####
     ##  Vérifie si le QCM peut être utilié par l'utilisateur  ##
-    list_xml = list_dir("./xml/qcm/", r'.*(.xml)$')
-    qcm_allow = list_xml_allow("xml/qcm/", list_xml, session['formation'], session['listmatiere'], session['grade'], session['username'])
+    list_xml = list_dir(PATH_QCM, r'.*(.xml)$')
+    qcm_allow = list_xml_allow(PATH_QCM, list_xml, session['formation'], session['listmatiere'], session['grade'], session['username'])
 
     qcm = request.args['ref'] + ".xml"
 
@@ -333,7 +358,7 @@ def faire_qcm():
 
     ## List = [ [ ["number","Question 1"],[ ["number","Réponse 1" ], ["number","Réponse 2" ] ] ],
     ##        [ [ ["number","Question 2"],[ ["number","Réponse 1" ], ["number","Réponse 2" ] ] ] ]
-    list_question_anwser = qcm_list_question_anwser("./xml/qcm/", qcm)
+    list_question_anwser = qcm_list_question_anwser(PATH_QCM, qcm)
     return render_template('faire_qcm/index.html', list=list_question_anwser, name_qcm=request.args['ref'])
     return redirect(url_for('home', id="list_qcm"))
 
@@ -348,7 +373,7 @@ def correction_qcm():
         ##  Vérifie si l'argument ?ref= existe                                     ##
         ##  Si il existe, test si la référence contient des caractères incorrecte  ##
         try:
-            if string_match(request.args['ref'], r'[A-Za-z0-9-]+') == False :
+            if string_match(request.args['ref'], REGEXP_NAME_QCM) == False :
                 return "ERROR - La référence possède un ou des caractères incorrecte"
                 return redirect(url_for('home', id="list_qcm"))
         except KeyError :
@@ -357,8 +382,8 @@ def correction_qcm():
 
         ####====================================================####
         ##  Vérifie si le QCM peut être utilié par l'utilisateur  ##
-        list_xml = list_dir("./xml/qcm/", r'.*(.xml)$')
-        qcm_allow = list_xml_allow("xml/qcm/", list_xml, session['formation'], session['listmatiere'], session['grade'], session['username'])
+        list_xml = list_dir(PATH_QCM, r'.*(.xml)$')
+        qcm_allow = list_xml_allow(PATH_QCM, list_xml, session['formation'], session['listmatiere'], session['grade'], session['username'])
         qcm = request.args['ref'] + ".xml"
 
         if not qcm in qcm_allow:
@@ -367,12 +392,12 @@ def correction_qcm():
 
         ## Correction
         note = 0
-        path_qcm = "./xml/correction/" + qcm
+        path_qcm = PATH_QCM_CORRECTION + qcm
         tree = etree.parse(path_qcm)
 
         for number in tree.xpath("/QCMCorrection/correction/question/@num"):
             radio_value = "question_" + number + "_awswer"
-            print(radio_value)
+            #print(radio_value)
             xurl = "/QCMCorrection/correction/question[@num=" + number + "]/@id"
             if request.form.get(radio_value) == tree.xpath(xurl)[0]:
                 note += 1
