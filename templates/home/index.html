@@ -61,6 +61,7 @@
 		<div class="mdl-card mdl-cell mdl-cell--12-col">
 			<div class="mdl-card__supporting-text">
 				<h4>Liste des QCM</h4>
+				{% if error_list_qcm %}<p>{{ error_list_qcm }}</p>{% endif %}
 				<table width="100%" class="mdl-data-table">
 					<thead>
 						<tr>

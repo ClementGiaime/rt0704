@@ -197,3 +197,45 @@ def remove_file(path, qcm):
     path_file = path + qcm
     remove(path_file)
     return True
+
+
+
+####=======================================================================####
+##  Vérification du nom du qcm                                               ##
+##  Si il existe un déjà un QCM avec le même nom donné dans le formulaire    ##
+def qcm_name_exist(path, name_qcm):
+    list_xml = list_dir(path, r'.*(.xml)$')
+    name_qcm = name_qcm + ".xml"
+    for xml in list_xml:
+        if name_qcm == xml:
+            return True
+    return False
+
+
+
+####=====================================================================####
+##  Vérifie si l'argument ?ref= existe                                     ##
+##  Si il existe, test si la référence contient des caractères incorrecte  ##
+##  Vérifie si le QCM peut être utilié par l'utilisateur                   ##
+##  /delete_qcm /faire_qcm /correction_qcm                                 ##
+def ref_qcm_allow(name_qcm):
+    if name_qcm is None:
+        session['error_list_qcm'] = "ERREUR - La référence du QCM n'existe pas"
+        return False
+
+    if string_match(name_qcm, REGEXP_NAME_QCM) == False :
+        session['error_list_qcm'] = "ERROR - La référence possède un ou des caractères incorrecte"
+        return False
+
+    ####====================================================####
+    ##  Vérifie si le QCM peut être utilié par l'utilisateur  ##
+    list_xml = list_dir(PATH_QCM, r'.*(.xml)$')
+    qcm_allow = list_xml_allow(PATH_QCM, list_xml, session['formation'], session['listmatiere'], session['grade'], session['username'])
+
+    qcm = name_qcm + ".xml"
+
+    if not qcm in qcm_allow:
+        session['error_list_qcm'] = "ERROR - Le QCM n'existe pas ou tu n'as pas les droits nécéssaire pour le faire"
+        return False
+
+    return True

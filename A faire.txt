@@ -2,13 +2,13 @@ A faire pour le QCM :
 
 ## Ficher de configuration
 
-Optimisation de /faire_qcm /correction_qcm /delete_qcm
+## Optimisation de /faire_qcm /correction_qcm /delete_qcm
 
 Correction du QCM, créer un fichier XML contenant la date et la note
 
 Optimisation de XPATH
 
-Modification des variables GET et POST en request.form.get('ref'), il manque /validate_qcm
+# Modification des variables GET et POST en request.form.get('ref'), il manque /validate_qcm
 
 Commentaire du code
 Changement des nom de variables (awswer)
