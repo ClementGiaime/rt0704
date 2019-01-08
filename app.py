@@ -205,7 +205,7 @@ def validate_qcm():
         ####=======================================================================####
         ##  Si il existe un déjà un QCM avec le même nom donné dan sle formulaire    ##
         ##  Redirection vers le formulaire de création de qcm avec message d'erreur  ##
-        if qcm_name_exist(PATH_QCM, request.form['name']) == False:
+        if qcm_name_exist(PATH_QCM, request.form['name']) == True:
             session['error'] = "* Un QCM possède déja ce nom (" + request.form['name'] + ")"
             return redirect(url_for('home', id="create_qcm"))
 
@@ -294,6 +294,7 @@ def delete_qcm():
 
     remove_file(PATH_QCM, qcm)
     remove_file(PATH_QCM_CORRECTION, qcm)
+    return redirect(url_for('home', id="list_qcm"))
 
 
 
