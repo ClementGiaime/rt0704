@@ -4,14 +4,15 @@ A faire pour le QCM :
 
 ## Optimisation de /faire_qcm /correction_qcm /delete_qcm
 
-Correction du QCM, créer un fichier XML contenant la date et la note
+## Modification des variables GET et POST en request.form.get('ref'), il manque /validate_qcm
 
+## Gestion des erreurs avec la session['error']
+
+## Commentaire du code
+
+Correction du QCM, créer un fichier XML contenant la date et la note
 Optimisation de XPATH
 
-# Modification des variables GET et POST en request.form.get('ref'), il manque /validate_qcm
-
-Commentaire du code
 Changement des nom de variables (awswer)
-Gestion des erreurs avec la session['error']
 
 Lors de la création de QCM, le professeur peut choisir ASR pour la matiere CHPS001

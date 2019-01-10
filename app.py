@@ -85,7 +85,7 @@ def logout():
     session.pop('formation', None)
     session.pop('grade', None)
     session.pop('listmatiere', None)
-    session.pop('error', None)
+    session.pop('error_create_qcm', None)
     session.pop('error_list_qcm', None)
     return redirect(url_for('login'))
 
@@ -106,11 +106,11 @@ def home():
     ####==================================================================####
     ## Les variable de session sont utilié pour passé des messages d'erreur ##
     try:
-        if session['error']:
-            error = session['error']
-            session.pop('error', None)
+        if session['error_create_qcm']:
+            error_create_qcm = session['error_create_qcm']
+            session.pop('error_create_qcm', None)
     except KeyError :
-        error = ""
+        error_create_qcm = ""
 
     try:
         if session['error_list_qcm']:
@@ -139,9 +139,9 @@ def home():
     qcm_info = list_xml_info(PATH_QCM, qcm_allow, session['formation'], session['listmatiere'])
 
     if session['grade'] == "etudiant" :
-        return render_template('home/index.html', grade="etudiant", user_info=session, varaible=qcm_info, listmatiere=session['listmatiere'], active=active, error_in_form=error, error_list_qcm=error_list_qcm)
+        return render_template('home/index.html', grade="etudiant", user_info=session, varaible=qcm_info, listmatiere=session['listmatiere'], active=active, error_in_form=error_create_qcm, error_list_qcm=error_list_qcm)
     elif session['grade'] == "professeur" :
-        return render_template('home/index.html', grade="professeur", listformation=session['formation'].split(","), varaible=qcm_info, listmatiere=session['listmatiere'], active=active, error_in_form=error, error_list_qcm=error_list_qcm)
+        return render_template('home/index.html', grade="professeur", listformation=session['formation'].split(","), varaible=qcm_info, listmatiere=session['listmatiere'], active=active, error_in_form=error_create_qcm, error_list_qcm=error_list_qcm)
 
 
 '''
@@ -168,10 +168,10 @@ def create_qcm():
             return redirect(url_for('home', id="create_qcm"))
 
         ####=======================================================================####
-        ##  Si il existe un déjà un QCM avec le même nom donné dan sle formulaire    ##
+        ##  Si il existe un déjà un QCM avec le même nom donné dans le formulaire    ##
         ##  Redirection vers le formulaire de création de qcm avec message d'erreur  ##
         if qcm_name_exist(PATH_QCM, request.form['qcm_name']) == True:
-            session['error'] = "* Un QCM possède déja ce nom (" + request.form['qcm_name'] + ")"
+            session['error_create_qcm'] = "* Un QCM possède déja ce nom (" + request.form['qcm_name'] + ")"
             return redirect(url_for('home', id="create_qcm"))
 
         return render_template('create_qcm/index.html', name=request.form['qcm_name'], matiere=request.form['qcm_matiere'], listformation=",".join(request.form.getlist('qcm_formation')), listquestion=int(request.form['qcm_question']), listawswer=int(request.form['qcm_answer']))
@@ -206,10 +206,10 @@ def validate_qcm():
         ##  Si il existe un déjà un QCM avec le même nom donné dan sle formulaire    ##
         ##  Redirection vers le formulaire de création de qcm avec message d'erreur  ##
         if qcm_name_exist(PATH_QCM, request.form['name']) == True:
-            session['error'] = "* Un QCM possède déja ce nom (" + request.form['name'] + ")"
+            session['error_create_qcm'] = "* Un QCM possède déja ce nom (" + request.form['name'] + ")"
             return redirect(url_for('home', id="create_qcm"))
 
-
+        ## Création du QCM
         ## <QCM>
         qcm = etree.Element('QCM')
         qcm_correction = etree.Element('QCMCorrection')
@@ -234,7 +234,7 @@ def validate_qcm():
             question = etree.SubElement(contenu, 'question', num=str(number_question))
             form_number_question = "question_" + str(number_question)
             if string_match(request.form[form_number_question], REGEXP_INPUT_QUESTION) == False:
-                session['error'] = "* ERREUR - La question numéro " + str(number_question) + " possède un ou des caractères incorrectes"
+                session['error_create_qcm'] = "* ERREUR - La question numéro " + str(number_question) + " possède un ou des caractères incorrectes"
                 return redirect(url_for('home', id="create_qcm"))
 
             etree.SubElement(question, 'intitule').text = request.form[form_number_question]
@@ -245,10 +245,10 @@ def validate_qcm():
             regexp_value_awswer = "[1-" + str(request.form['number_question']) + "]"
             try:
                 if string_match(request.form[form_value_awswer], regexp_value_awswer) == False:
-                    session['error'] = "* ERREUR - au moins une réponse par question doit étre validée"
+                    session['error_create_qcm'] = "* ERREUR - au moins une réponse par question doit étre validée"
                     return redirect(url_for('home', id="create_qcm"))
             except KeyError :
-                session['error'] = "* ERREUR - au moins une réponse par question doit étre validée"
+                session['error_create_qcm'] = "* ERREUR - au moins une réponse par question doit étre validée"
                 return redirect(url_for('home', id="create_qcm"))
             etree.SubElement(correction, 'question', num=str(number_question), id=request.form[form_value_awswer])
 
@@ -258,7 +258,7 @@ def validate_qcm():
                 ## Vérification de chaque réponse
                 form_number_awswer = "question_" + str(number_question) + "_awswer_" + str(number_awswer)
                 if string_match(request.form[form_number_awswer], REGEXP_INPUT_ANSWER) == False:
-                    session['error'] = "* ERREUR - La réponse numéro " + str(number_awswer) + " de la question numéro " + str(number_question) + " possède un ou des caractères incorrectes"
+                    session['error_create_qcm'] = "* ERREUR - La réponse numéro " + str(number_awswer) + " de la question numéro " + str(number_question) + " possède un ou des caractères incorrectes"
                     return redirect(url_for('home', id="create_qcm"))
                 etree.SubElement(reponses, 'reponse', id=str(number_awswer)).text = request.form[form_number_awswer]
 

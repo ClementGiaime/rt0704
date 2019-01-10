@@ -101,32 +101,44 @@
 		<div class="mdl-card mdl-cell mdl-cell--12-col">
 			<div class="mdl-card__supporting-text">
 
-
+				<h4>Paramètre du QCM</h4>
 				<form method="post" action="/create_qcm">
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+    						<input class="mdl-textfield__input" type="text" id="sample3" name="qcm_name">
+    						<label class="mdl-textfield__label" for="sample3">Nom du QCM</label>
+  					</div>
 
-   				<p><label>Nom du QCM</label> : <input type="text" name="qcm_name"></p>
-					<p><label>Formation</label> :
+					Formation :
 						{% for formation in listformation %}
-						<input type="checkbox" name="qcm_formation" value="{{ formation }}">{{ formation }}
+						<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="checkbox-{{ formation }}">
+	  						<input type="checkbox" id="checkbox-{{ formation }}" class="mdl-checkbox__input" name="qcm_formation" value="{{ formation }}">
+  							<span class="mdl-checkbox__label">{{ formation }}</span>
+						</label>
 						{% endfor %}
-					</p>
-					<p><label>Matière</label> :
+
+
+						Matière :
 						{% for matiere in session['listmatiere'] %}
-						<input type="radio" name="qcm_matiere" value="{{ matiere }}">{{ matiere }}
+						<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-{{ matiere }}">
+  						<input type="radio" id="option-{{ matiere }}" class="mdl-radio__button" name="qcm_matiere" value="{{ matiere }}">
+  						<span class="mdl-radio__label">{{ matiere }}</span>
+						</label>
 						{% endfor %}
-					</p>
 
-					<p>
-						<label>Auteur</label> : {{ session['username'] }}
-					</p>
+					Auteur : {{ session['username'] }}
 
-					<p>
-						<label>Nombre de question</label> : <input type="number" name="qcm_question"  min="0">
-					</p>
 
-					<p>
-						<label>Nombre de réponse par question</label> : <input type="number" name="qcm_answer"  min="0"">
-					</p>
+					<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+    				<input class="mdl-textfield__input" type="text" pattern="[1-9][0-9]?" id="sample2" name="qcm_question">
+    				<label class="mdl-textfield__label" for="sample2">Nombre de question</label>
+    				<span class="mdl-textfield__error">Nombre de question de 1 à 99!</span>
+  				</div>
+ 					|
+					<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+	    			<input class="mdl-textfield__input" type="text" pattern="[1-9]{1}" id="sample1" name="qcm_answer">
+	    			<label class="mdl-textfield__label" for="sample1">Nombre de réponse par question</label>
+	    			<span class="mdl-textfield__error">Nombre de réponse de 1 à 9 par question!</span>
+	  			</div>
 
 
 						<input type="submit" value="Création du QCM" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--accent mdl-color-text--accent-contrast">

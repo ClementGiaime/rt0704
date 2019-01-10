@@ -73,6 +73,9 @@ def list_dir(path, regexp):
             list.append(file)
     return list
 
+#####=============================================================================================================#####
+###   Retourne une liste des fichiers avec des informations type de formation, type de matiere et nom de l'auteur   ###
+###   list = [ [ xml, formation, matiere, auteur], [ xml-2, formation, matiere, auteur]  ]
 def list_xml_info(path, list_xml, formation, listmatiere) :
     list_qcm_info = []
 
@@ -84,6 +87,9 @@ def list_xml_info(path, list_xml, formation, listmatiere) :
 
     return list_qcm_info
 
+#####=================================================#####
+###   Retourne True si l'étudiant peut utilisé le qcm   ###
+###   Retourne False si il n'a pas le droit             ###
 def xml_allow_etudiant(path, xml, formation, listmatiere) :
     xurl = path + xml
     tree = etree.parse(xurl)
@@ -92,7 +98,9 @@ def xml_allow_etudiant(path, xml, formation, listmatiere) :
     else :
         return False
 
-
+#####=================================================#####
+###   Retourne True si le prof peut utilisé le qcm   ###
+###   Retourne False si il n'a pas le droit             ###
 def xml_allow_professeur(path, xml, auteur, listmatiere) :
     xurl = path + xml
     tree = etree.parse(xurl)
@@ -127,7 +135,7 @@ def list_xml_allow(path, list_xml, formation, listmatiere, grade, nom) :
 def form_allow(name, formation, matiere, question, answer):
 ## name = "string", formation = ["ASR","CHPS"], matiere = ["RT0701"], question = "number", answer = "number"
     if string_match(name, REGEXP_NAME_QCM) == False:
-        session['error'] = "* Le nom n'est pas conforme"
+        session['error_create_qcm'] = "* Le nom n'est pas conforme"
         return False
 
     ## Compte le nombre de formation
@@ -138,19 +146,19 @@ def form_allow(name, formation, matiere, question, answer):
     ## par le formulaire est autorisée pour le professeur
 
     if list_string_match(formation, REGEXP_NAME_FORMATION) == False or not number_formation_form == number_formation_set:
-        session['error'] = "* Erreur sur la ou les Formation"
+        session['error_create_qcm'] = "* Erreur sur la ou les Formation"
         return False
 
     if list_string_match(matiere, REGEXP_NAME_MATIERE) == False or not matiere[0] in session['listmatiere']:
-        session['error'] = "* Erreur sur la matière"
+        session['error_create_qcm'] = "* Erreur sur la matière"
         return False
 
     if string_match(question, REGEXP_NUMBER_QUESTION) == False:
-        session['error'] = "* Le nombre de question de 1 à 99)"
+        session['error_create_qcm'] = "* Le nombre de question de 1 à 99"
         return False
 
     if string_match(answer, REGEXP_NUMBER_ANSWER) == False:
-        session['error'] = "* Le nombre de réponse de 1 à 9 par question"
+        session['error_create_qcm'] = "* Le nombre de réponse de 1 à 9 par question"
         return False
 
     return True
@@ -193,6 +201,8 @@ def qcm_list_question_anwser(path, qcm):
     return list_question_anwser
 
 
+
+
 def remove_file(path, qcm):
     path_file = path + qcm
     remove(path_file)
@@ -202,7 +212,7 @@ def remove_file(path, qcm):
 
 ####=======================================================================####
 ##  Vérification du nom du qcm                                               ##
-##  Si il existe un déjà un QCM avec le même nom donné dans le formulaire    ##
+##  Retourne True si il existe un déjà un QCM avec le même nom donné dans le formulaire    ##
 def qcm_name_exist(path, name_qcm):
     list_xml = list_dir(path, r'.*(.xml)$')
     name_qcm = name_qcm + ".xml"
