@@ -1,0 +1,59 @@
+{% extends 'base_qcm.html' %}
+
+{% block content %}
+<div class="mdl-layout__tab-panel is-active" id="create_qcm">
+  <form method="post" action="/validate_qcm">
+  <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+    <div class="mdl-card mdl-cell mdl-cell--12-col">
+      <div class="mdl-card__supporting-text">
+
+        <h4>Nom du QCM : {{ name }}</h4>
+
+        <input type='hidden' name='name' value='{{ name }}'>
+        <input type='hidden' name='number_question' value='{{ listquestion }}'>
+        <input type='hidden' name='number_awswer' value='{{ listawswer }}'>
+
+        <h5>Associé au formation : {{ listformation }}</h5> <input type='hidden' name='formation' value='{{ listformation }}'>
+        <h5>Associé à la matière : {{ matiere }}</h5> <input type='hidden' name='matiere' value='{{ matiere }}'>
+      </div>
+    </div>
+  </section>
+
+
+
+  {% for question in range(1, listquestion + 1) %}
+  <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+    <div class="mdl-card mdl-cell mdl-cell--12-col">
+      <div class="mdl-card__supporting-text">
+
+        <h5>Question {{ question }} :
+        <div class="mdl-textfield mdl-js-textfield">
+          <input class="mdl-textfield__input" type="text" id="question_{{ question }}" name="question_{{ question }}">
+          <label class="mdl-textfield__label" for="question_{{ question }}">question {{ question }}</label>
+        </div></h5>
+
+      {% for awswer in range(1, listawswer + 1) %}
+        <input type="radio" value="{{ awswer }}" name="question_{{ question }}_awswer" />
+        <div class="mdl-textfield mdl-js-textfield">
+          <input class="mdl-textfield__input" type="text" id="question_{{ question }}_awswer_{{ awswer }}" name="question_{{ question }}_awswer_{{ awswer }}">
+          <label class="mdl-textfield__label" for="question_{{ question }}_awswer_{{ awswer }}">réponse {{ awswer }}</label>
+        </div><br>
+      {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endfor %}
+
+  <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+    <div class="mdl-card mdl-cell mdl-cell--12-col">
+      <div class="mdl-card__supporting-text">
+      <input type="submit" value="Validation du QCM" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--accent mdl-color-text--accent-contrast">
+      </div>
+    </div>
+  </section>
+  </form>
+
+
+</div>
+
+{% endblock %}

@@ -1,6 +1,7 @@
 ####========####
 ## SECRET KEY ##
 SECRET_KEY_APP = 'J84z0UH06f8gy*fg8vHg'
+SECRET_SHARED_KEY = "jx5E4dx5fsSGb1fF12jqCn"
 
 ####======####
 ## PATH DIR ##

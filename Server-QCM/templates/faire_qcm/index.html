@@ -1,0 +1,29 @@
+{% extends 'base_qcm.html' %}
+
+{% block content %}
+<div class="mdl-layout__tab-panel is-active" id="create_qcm">
+  <form method="post" action="/correction_qcm?ref={{ name_qcm }}">
+
+    {% for question in list %}
+    <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+      <div class="mdl-card mdl-cell mdl-cell--12-col">
+        <div class="mdl-card__supporting-text">
+
+          <h3>Question {{ question[0][0] }} - {{ question[0][1] }}</h3>
+          {% for anwser in question[1] %}
+          <p><input type="radio" value="{{ anwser[0] }}" name="question_{{ question[0][0] }}_awswer" />{{ anwser[0] }} - {{ anwser[1] }}</p>
+          {% endfor %}
+          </div>
+          </div>
+    </section>
+    {% endfor %}
+    <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+      <div class="mdl-card mdl-cell mdl-cell--12-col">
+        <div class="mdl-card__supporting-text">
+          <input type="submit" value="Correction du QCM" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--accent mdl-color-text--accent-contrast">
+        </div>
+        </div>
+  </section>
+  </form>
+</div>
+{% endblock %}
