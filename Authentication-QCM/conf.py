@@ -1,3 +1,8 @@
+####====####
+## SERVER ##
+BIND_ADDRESS = '0.0.0.0'
+BIND_PORT = 5002
+
 ####========####
 ## SECRET KEY ##
 SECRET_KEY_APP = 'J84z0UH06f8gy*fg8vHg'
