@@ -7,7 +7,7 @@ app = Flask(__name__)
 # Set the secret key to some random bytes.
 app.secret_key = SECRET_KEY_APP
 
-@app.route('/authentication', methods=['GET','POST'])
+@app.route('/authentication', methods=['POST'])
 def authentication():
 
     if request.method == 'POST':

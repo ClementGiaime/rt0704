@@ -10,6 +10,9 @@ app = Flask(__name__)
 app.secret_key = SECRET_KEY_APP
 
 
+@app.route('/test', methods=['GET', 'POST'])
+def test():
+    return "<h1>OK</h1>"
 
 
 @app.route('/')
@@ -57,8 +60,6 @@ def login():
             if r.status_code != 200:
                 return "Error Authentication Server"
 
-            print("XML : " + r.text)
-            print(r.status_code)
 
             list_info_user = request_session_xml(r.text)
 
@@ -275,10 +276,19 @@ def validate_qcm():
         document_xml_correction = etree.ElementTree(qcm_correction)
 
         name_of_qcm = PATH_QCM + request.form['name'] + ".xml"
-        name_of_qcm_correction = PATH_QCM_CORRECTION + request.form['name'] + ".xml"
+
+        #name_of_qcm_correction = PATH_QCM_CORRECTION + request.form['name'] + ".xml"
+        #document_xml_correction.write(name_of_qcm_correction)
+
+        ## Envoie de la correction au serveur de correction
+        data = {'secret_shared_key':SECRET_SHARED_KEY, 'name_qcm':request.form['name'], 'xml_correction':etree.tostring(document_xml_correction, pretty_print=True)}
+        r = requests.post(SERVER_CORRECTOR_PUSH_QCM, data = data)
+
+        if r.status_code != 200:
+            session['error_create_qcm'] = "* Error Corrector Server"
+            return redirect(url_for('home', id="create_qcm"))
 
         document_xml.write(name_of_qcm)
-        document_xml_correction.write(name_of_qcm_correction)
 
         return redirect(url_for('home', id="list_qcm"))
     return redirect(url_for('home'))
@@ -301,8 +311,15 @@ def delete_qcm():
 
     qcm = request.args['ref'] + ".xml"
 
+    data = {'secret_shared_key':SECRET_SHARED_KEY, 'name_qcm':request.args['ref']}
+    r = requests.post(SERVER_CORRECTOR_DELETE, data = data)
+
+    if r.status_code != 200:
+        session['error_list_qcm'] = "* Error Corrector Server"
+        return redirect(url_for('home', id="list_qcm"))
+
     remove_file(PATH_QCM, qcm)
-    remove_file(PATH_QCM_CORRECTION, qcm)
+    #remove_file(PATH_QCM_CORRECTION, qcm)
     return redirect(url_for('home', id="list_qcm"))
 
 

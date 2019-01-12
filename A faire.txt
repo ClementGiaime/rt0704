@@ -1,5 +1,9 @@
 A faire pour le QCM :
 
+
+Redirection des LOCALHOST
+
+
 ## Ficher de configuration
 
 ## Optimisation de /faire_qcm /correction_qcm /delete_qcm
@@ -16,3 +20,6 @@ Optimisation de XPATH
 Changement des nom de variables (awswer)
 
 Lors de la création de QCM, le professeur peut choisir ASR pour la matiere CHPS001
+
+
+http://dridk.me/python-requests.html

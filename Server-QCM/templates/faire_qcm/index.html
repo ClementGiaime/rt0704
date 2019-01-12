@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="mdl-layout__tab-panel is-active" id="create_qcm">
-  <form method="post" action="/correction_qcm?ref={{ name_qcm }}">
+  <form method="post" action="http://localhost:5002/correction_qcm?ref={{ name_qcm }}">
 
     {% for question in list %}
     <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">

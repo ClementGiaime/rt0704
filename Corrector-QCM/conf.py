@@ -3,14 +3,6 @@
 SECRET_KEY_APP = 'J84z0UH06f8gy*fg8vHg'
 SECRET_SHARED_KEY = "jx5E4dx5fsSGb1fF12jqCn"
 
-####=####
-## URL ##
-SERVER_AUTHENTICATION = 'http://localhost:5001/authentication'
-SERVER_CORRECTOR = 'http://localhost:5002'
-SERVER_CORRECTOR_PUSH_QCM = SERVER_CORRECTOR + '/push_qcm'
-SERVER_CORRECTOR_DELETE = SERVER_CORRECTOR + '/delete_qcm'
-
-
 ####======####
 ## PATH DIR ##
 PATH_QCM = "./xml/qcm/"
