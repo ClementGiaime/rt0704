@@ -2,7 +2,7 @@
 from flask import Flask, session, redirect, url_for, escape, request, render_template
 import re
 from lxml import etree
-from os import listdir, remove
+from os import listdir, remove, path
 from conf import *
 
 

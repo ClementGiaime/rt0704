@@ -1,7 +1,9 @@
+from os import path
 ####====####
 ## SERVER ##
 BIND_ADDRESS = '0.0.0.0'
 BIND_PORT = 5000
+
 
 ## For Redirection
 ADDRESS_SERVER_AUTHENTICATION = 'localhost'
@@ -26,8 +28,10 @@ SERVER_CORRECTOR_DELETE = SERVER_CORRECTOR + '/delete_qcm'
 
 ####======####
 ## PATH DIR ##
-PATH_QCM = "./xml/qcm/"
-PATH_QCM_CORRECTION = "./xml/correction/"
+PATH_DIR = path.dirname(path.realpath(__file__)) + "/"
+
+PATH_QCM = PATH_DIR + "xml/qcm/"
+PATH_QCM_CORRECTION = PATH_DIR + "xml/correction/"
 
 ####====####
 ## REGEXP ##

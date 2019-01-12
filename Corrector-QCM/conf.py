@@ -10,8 +10,8 @@ SECRET_SHARED_KEY = "jx5E4dx5fsSGb1fF12jqCn"
 
 ####======####
 ## PATH DIR ##
-PATH_QCM = "./xml/qcm/"
-PATH_QCM_CORRECTION = "./xml/correction/"
+PATH_DIR = path.dirname(path.realpath(__file__)) + "/"
+PATH_QCM_CORRECTION = PATH_DIR + "xml/correction/"
 
 ####====####
 ## REGEXP ##

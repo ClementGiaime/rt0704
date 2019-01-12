@@ -1,3 +1,4 @@
+from os import path
 ####====####
 ## SERVER ##
 BIND_ADDRESS = '0.0.0.0'
@@ -10,9 +11,8 @@ SECRET_SHARED_KEY = "jx5E4dx5fsSGb1fF12jqCn"
 
 ####======####
 ## PATH DIR ##
-PATH_QCM = "./xml/qcm/"
-PATH_QCM_CORRECTION = "./xml/correction/"
-PATH_PERMISSION = "./xml/perm.xml"
+PATH_DIR = path.dirname(path.realpath(__file__)) + "/"
+PATH_PERMISSION = PATH_DIR + "xml/perm.xml"
 
 ####====####
 ## REGEXP ##
