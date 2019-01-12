@@ -1,7 +1,7 @@
 ####====####
 ## SERVER ##
 BIND_ADDRESS = '0.0.0.0'
-BIND_PORT = 5002
+BIND_PORT = 5001
 
 ####========####
 ## SECRET KEY ##
