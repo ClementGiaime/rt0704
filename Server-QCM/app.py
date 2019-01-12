@@ -341,7 +341,7 @@ def faire_qcm():
     ## List = [ [ ["number","Question 1"],[ ["number","Réponse 1" ], ["number","Réponse 2" ] ] ],
     ##        [ [ ["number","Question 2"],[ ["number","Réponse 1" ], ["number","Réponse 2" ] ] ] ]
     list_question_anwser = qcm_list_question_anwser(PATH_QCM, qcm)
-    return render_template('faire_qcm/index.html', list=list_question_anwser, name_qcm=request.args['ref'])
+    return render_template('faire_qcm/index.html', list=list_question_anwser, name_qcm=request.args['ref'], ip_corrector=ADDRESS_SERVER_CORRECTOR, port_corrector=PORT_SERVER_CORRECTOR)
     return redirect(url_for('home', id="list_qcm"))
 
 

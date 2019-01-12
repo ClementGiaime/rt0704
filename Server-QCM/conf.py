@@ -1,16 +1,37 @@
-from os import path
+from os import path, environ
 ####====####
 ## SERVER ##
-BIND_ADDRESS = '0.0.0.0'
-BIND_PORT = 5000
+if environ.get('BIND_ADDRESS_QCM') is None:
+    BIND_ADDRESS = '0.0.0.0'
+else:
+    BIND_ADDRESS = environ['BIND_ADDRESS_QCM']
 
+if environ.get('BIND_PORT_QCM') is None:
+    BIND_PORT = 5000
+else:
+    BIND_PORT = int(environ['BIND_PORT_QCM'])
 
-## For Redirection
-ADDRESS_SERVER_AUTHENTICATION = 'localhost'
-PORT_SERVER_AUTHENTICATION = '5001'
+## ADDRESS_SERVER_AUTHENTICATION
+if environ.get('ADDRESS_SERVER_AUTHENTICATION') is None:
+    ADDRESS_SERVER_AUTHENTICATION = 'localhost'
+else:
+    ADDRESS_SERVER_AUTHENTICATION = environ['ADDRESS_SERVER_AUTHENTICATION']
 
-ADDRESS_SERVER_CORRECTOR = 'localhost'
-PORT_SERVER_CORRECTOR = '5002'
+if environ.get('PORT_SERVER_AUTHENTICATION') is None:
+    PORT_SERVER_AUTHENTICATION = '5001'
+else:
+    PORT_SERVER_AUTHENTICATION = environ['PORT_SERVER_AUTHENTICATION']
+
+## ADDRESS_SERVER_CORRECTOR
+if environ.get('ADDRESS_SERVER_CORRECTOR') is None:
+    ADDRESS_SERVER_CORRECTOR = 'localhost'
+else:
+    ADDRESS_SERVER_CORRECTOR = environ['ADDRESS_SERVER_CORRECTOR']
+
+if environ.get('PORT_SERVER_CORRECTOR') is None:
+    PORT_SERVER_CORRECTOR = '5001'
+else:
+    PORT_SERVER_CORRECTOR = environ['PORT_SERVER_CORRECTOR']
 
 
 ####========####
@@ -29,7 +50,6 @@ SERVER_CORRECTOR_DELETE = SERVER_CORRECTOR + '/delete_qcm'
 ####======####
 ## PATH DIR ##
 PATH_DIR = path.dirname(path.realpath(__file__)) + "/"
-
 PATH_QCM = PATH_DIR + "xml/qcm/"
 PATH_QCM_CORRECTION = PATH_DIR + "xml/correction/"
 

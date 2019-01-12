@@ -1,8 +1,26 @@
+from os import path, environ
 ####====####
 ## SERVER ##
-BIND_ADDRESS = '0.0.0.0'
-BIND_PORT = 5002
+if environ.get('BIND_ADDRESS_CORRECTOR') is None:
+    BIND_ADDRESS = '0.0.0.0'
+else:
+    BIND_ADDRESS = environ['BIND_ADDRESS_CORRECTOR']
 
+if environ.get('BIND_PORT_CORRECTOR') is None:
+    BIND_PORT = 5002
+else:
+    BIND_PORT = int(environ['BIND_PORT_CORRECTOR'])
+
+
+if environ.get('ADDRESS_SERVER_QCM') is None:
+    ADDRESS_SERVER_QCM = 'localhost'
+else:
+    ADDRESS_SERVER_QCM = environ['ADDRESS_SERVER_QCM']
+
+if environ.get('PORT_SERVER_QCM') is None:
+    PORT_SERVER_QCM = 5000
+else:
+    PORT_SERVER_QCM = environ['PORT_SERVER_QCM']
 ####========####
 ## SECRET KEY ##
 SECRET_KEY_APP = 'J84z0UH06f8gy*fg8vHg'

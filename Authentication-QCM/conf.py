@@ -1,8 +1,15 @@
-from os import path
+from os import path, environ
 ####====####
 ## SERVER ##
-BIND_ADDRESS = '0.0.0.0'
-BIND_PORT = 5001
+if environ.get('BIND_ADDRESS_AUTHENTICATION') is None:
+    BIND_ADDRESS = '0.0.0.0'
+else:
+    BIND_ADDRESS = environ['BIND_ADDRESS_AUTHENTICATION']
+
+if environ.get('BIND_PORT_AUTHENTICATION') is None:
+    BIND_PORT = 5001
+else:
+    BIND_PORT = int(environ['BIND_PORT_AUTHENTICATION'])
 
 ####========####
 ## SECRET KEY ##
