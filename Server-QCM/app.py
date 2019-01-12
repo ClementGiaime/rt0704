@@ -2,6 +2,7 @@
 from flask import Flask, session, redirect, url_for, escape, request, render_template
 from globalfunction import *
 from conf import *
+import requests
 
 app = Flask(__name__)
 
@@ -48,10 +49,18 @@ def login():
 
         if string_match(request.form.get('username')) == True :
 
-            ## Requet sur le fichier XML
+            ##
             ## list_info_user = ["nom","formation","grade",["matiere1","matiere2"...,"matieren"] ]
             ## Si l'utiliseur n'existe pas list_info_user = []
-            list_info_user = request_session(request.form['username'])
+            data = {'secret_shared_key':SECRET_SHARED_KEY, 'username':request.form.get('username')}
+            r = requests.post(SERVER_AUTHENTICATION, data = data)
+            if r.status_code != 200:
+                return "Error Authentication Server"
+
+            print("XML : " + r.text)
+            print(r.status_code)
+
+            list_info_user = request_session_xml(r.text)
 
             if not list_info_user :
                 return render_template('login/index.html', error="L'utilisateur n'existe pas !")

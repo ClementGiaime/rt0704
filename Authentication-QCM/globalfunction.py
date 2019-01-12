@@ -1,8 +1,7 @@
 # -*- coding:utf-8 -*-
-from flask import Flask, session, redirect, url_for, escape, request, render_template
-import re
+#from flask import Flask, session, redirect, url_for, escape, request, render_template
+#import re
 from lxml import etree
-from os import listdir, remove
 from conf import *
 
 

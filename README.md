@@ -10,3 +10,7 @@ Python Module lxml
 ```bash
 pip install lxml==4.2.5
 ```
+Python Module requests
+```bash
+pip install requests==2.21.0
+```

@@ -62,6 +62,39 @@ def request_session(username):
     return [user_request[0].text, formation_request[0].text, grade_request[0].text, listmatiere_string]
 
 
+def request_session_xml(xml):
+    tree = etree.fromstring(xml)
+
+    xurl = "/util/result"
+    result_request = tree.xpath(xurl)[0].text
+
+    if result_request == 'False' :
+        print(tree.xpath("/util/info")[0].text)
+        return False
+
+    xurl = "/util/nom"
+    user_request = tree.xpath(xurl)[0].text
+
+    xurl = "/util/formation"
+    formation_request = tree.xpath(xurl)[0].text
+
+    xurl = "/util/grade"
+    grade_request = tree.xpath(xurl)[0].text
+
+    xurl = "/util/listmatiere/matiere"
+    listmatiere_request = tree.xpath(xurl)
+
+    listmatiere_string = []
+    for matiere in listmatiere_request:
+        listmatiere_string.append(matiere.text)
+
+    return [user_request, formation_request, grade_request, listmatiere_string]
+
+
+
+
+
+
 #####==================================================================================================#####
 ###   Retourne une liste des fichiers du le dossier path et dont le nom des fichers correspondent à la regexp   ###
 ###   list = ["qcm-1","qcm-2","qcm-3","qcm-n"]

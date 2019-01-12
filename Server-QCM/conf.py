@@ -3,6 +3,12 @@
 SECRET_KEY_APP = 'J84z0UH06f8gy*fg8vHg'
 SECRET_SHARED_KEY = "jx5E4dx5fsSGb1fF12jqCn"
 
+####=####
+## URL ##
+SERVER_AUTHENTICATION = 'http://localhost:5001/authentication'
+SERVER_CORRECTOR = 'http://localhost:5002/corrector'
+
+
 ####======####
 ## PATH DIR ##
 PATH_QCM = "./xml/qcm/"
