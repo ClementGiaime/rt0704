@@ -27,7 +27,7 @@ if environ.get('NGINX_USE') is None:
         URL_SERVER_QCM = 'http://' + environ['ADDRESS_SERVER_QCM'] + ':' + str(PORT_SERVER_QCM)
 else:
     ADDRESS_SERVER_QCM = 'localhost'
-    URL_SERVER_QCM = ''
+    URL_SERVER_QCM = '/corrector'
 
 
 ####========####
