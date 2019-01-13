@@ -37,7 +37,7 @@ if environ.get('NGINX_USE') is None:
         URL_SERVER_CORRECTOR = 'http://' + environ['ADDRESS_SERVER_CORRECTOR'] + ':' + str(PORT_SERVER_CORRECTOR)
 else:
     ADDRESS_SERVER_CORRECTOR = 'localhost'
-    URL_SERVER_CORRECTOR = ''
+    URL_SERVER_CORRECTOR = '/corrector'
 
 
 ####========####
