@@ -23,15 +23,21 @@ else:
     PORT_SERVER_AUTHENTICATION = environ['PORT_SERVER_AUTHENTICATION']
 
 ## ADDRESS_SERVER_CORRECTOR
-if environ.get('ADDRESS_SERVER_CORRECTOR') is None:
-    ADDRESS_SERVER_CORRECTOR = 'localhost'
-else:
-    ADDRESS_SERVER_CORRECTOR = environ['ADDRESS_SERVER_CORRECTOR']
-
 if environ.get('PORT_SERVER_CORRECTOR') is None:
     PORT_SERVER_CORRECTOR = '5001'
 else:
     PORT_SERVER_CORRECTOR = environ['PORT_SERVER_CORRECTOR']
+
+if environ.get('NGINX_USE') is None:
+    if environ.get('ADDRESS_SERVER_CORRECTOR') is None:
+        ADDRESS_SERVER_CORRECTOR = 'localhost'
+        URL_SERVER_CORRECTOR = 'http://localhost:' + str(PORT_SERVER_CORRECTOR)
+    else:
+        ADDRESS_SERVER_CORRECTOR = environ['ADDRESS_SERVER_CORRECTOR']
+        URL_SERVER_CORRECTOR = 'http://' + environ['ADDRESS_SERVER_CORRECTOR'] + ':' + str(PORT_SERVER_CORRECTOR)
+else:
+    ADDRESS_SERVER_CORRECTOR = 'localhost'
+    URL_SERVER_CORRECTOR = ''
 
 
 ####========####

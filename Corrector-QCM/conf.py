@@ -12,15 +12,24 @@ else:
     BIND_PORT = int(environ['BIND_PORT_CORRECTOR'])
 
 
-if environ.get('ADDRESS_SERVER_QCM') is None:
-    ADDRESS_SERVER_QCM = 'localhost'
-else:
-    ADDRESS_SERVER_QCM = environ['ADDRESS_SERVER_QCM']
-
 if environ.get('PORT_SERVER_QCM') is None:
     PORT_SERVER_QCM = 5000
 else:
     PORT_SERVER_QCM = environ['PORT_SERVER_QCM']
+
+
+if environ.get('NGINX_USE') is None:
+    if environ.get('ADDRESS_SERVER_QCM') is None:
+        ADDRESS_SERVER_QCM = 'localhost'
+        URL_SERVER_QCM = 'http://localhost:' + str(PORT_SERVER_QCM)
+    else:
+        ADDRESS_SERVER_QCM = environ['ADDRESS_SERVER_QCM']
+        URL_SERVER_QCM = 'http://' + environ['ADDRESS_SERVER_QCM'] + ':' + str(PORT_SERVER_QCM)
+else:
+    ADDRESS_SERVER_QCM = 'localhost'
+    URL_SERVER_QCM = ''
+
+
 ####========####
 ## SECRET KEY ##
 SECRET_KEY_APP = 'J84z0UH06f8gy*fg8vHg'

@@ -64,7 +64,7 @@ def corrector():
             if request.form.get(radio_value) == tree.xpath(xurl)[0]:
                 note += 1
 
-        html = "<h3>Tu as " + str(note) + " sur " + str(number) +"<h3>Go <a href='http://" + ADDRESS_SERVER_QCM + ":" + PORT_SERVER_QCM + "/home'>home</a>"
+        html = "<h3>Tu as " + str(note) + " sur " + str(number) +"<h3>Go <a href='" + URL_SERVER_QCM + "/home'>home</a>"
         return html
 
     return "False", 405

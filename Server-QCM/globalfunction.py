@@ -69,7 +69,7 @@ def request_session_xml(xml):
     result_request = tree.xpath(xurl)[0].text
 
     if result_request == 'False' :
-        print(tree.xpath("/util/info")[0].text)
+        #print(tree.xpath("/util/info")[0].text)
         return False
 
     xurl = "/util/nom"
@@ -100,7 +100,7 @@ def request_session_xml(xml):
 ###   list = ["qcm-1","qcm-2","qcm-3","qcm-n"]
 def list_dir(path, regexp):
     list = []
-    print(listdir(path))
+    #print(listdir(path))
     for file in listdir(path):
         if string_match(file, regexp) == True :
             list.append(file)
@@ -208,7 +208,7 @@ def qcm_list_question_anwser(path, qcm):
 
     tree = etree.parse(path_qcm)
     number_of_question = int(tree.xpath("count(/QCM/contenu/question)"))
-    print("Number of question : " + str(number_of_question))
+    #print("Number of question : " + str(number_of_question))
 
     for number in range(1, number_of_question+1):
         list_temp = []
@@ -218,7 +218,7 @@ def qcm_list_question_anwser(path, qcm):
 
         xurl = "count(/QCM/contenu/question[@num=" + str(number) + "]/reponses/reponse)"
         number_of_anwser = int(tree.xpath(xurl))
-        print("Number of anwser : " + str(number_of_anwser))
+        #print("Number of anwser : " + str(number_of_anwser))
 
 
         for cpt in range(1, number_of_anwser+1):
@@ -230,7 +230,7 @@ def qcm_list_question_anwser(path, qcm):
         question_anwser = [ intitule, list_temp ]
         list_question_anwser.append(question_anwser)
 
-    print(list_question_anwser)
+    #print(list_question_anwser)
     return list_question_anwser
 
 

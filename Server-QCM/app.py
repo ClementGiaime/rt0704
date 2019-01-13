@@ -306,7 +306,7 @@ def delete_qcm():
     ##  Si il existe, test si la référence contient des caractères incorrecte  ##
     ##  Vérifie si le QCM peut être utilié par l'utilisateur                   ##
     if ref_qcm_allow(request.args.get('ref')) == False:
-        print(session['error_list_qcm'])
+        #print(session['error_list_qcm'])
         return redirect(url_for('home', id="list_qcm"))
 
     qcm = request.args['ref'] + ".xml"
@@ -341,7 +341,7 @@ def faire_qcm():
     ## List = [ [ ["number","Question 1"],[ ["number","Réponse 1" ], ["number","Réponse 2" ] ] ],
     ##        [ [ ["number","Question 2"],[ ["number","Réponse 1" ], ["number","Réponse 2" ] ] ] ]
     list_question_anwser = qcm_list_question_anwser(PATH_QCM, qcm)
-    return render_template('faire_qcm/index.html', list=list_question_anwser, name_qcm=request.args['ref'], ip_corrector=ADDRESS_SERVER_CORRECTOR, port_corrector=PORT_SERVER_CORRECTOR)
+    return render_template('faire_qcm/index.html', list=list_question_anwser, name_qcm=request.args['ref'], url_corrector=URL_SERVER_CORRECTOR)
     return redirect(url_for('home', id="list_qcm"))
 
 
