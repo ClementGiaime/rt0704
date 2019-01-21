@@ -283,6 +283,8 @@ def validate_qcm():
         ## Envoie de la correction au serveur de correction
         data = {'secret_shared_key':SECRET_SHARED_KEY, 'name_qcm':request.form['name'], 'xml_correction':etree.tostring(document_xml_correction, pretty_print=True)}
         r = requests.post(SERVER_CORRECTOR_PUSH_QCM, data = data)
+        print(SERVER_CORRECTOR_PUSH_QCM)
+        print(r.status_code)
 
         if r.status_code != 200:
             session['error_create_qcm'] = "* Error Corrector Server"
