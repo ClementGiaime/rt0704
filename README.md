@@ -33,6 +33,7 @@ pip3 install requests==2.21.0
 3°/ Flask est un framework open-source de développement web en Python, c'est un ensemble de modules qui facilite la programmation de sites web dynamiques. et ainsi cela permet de ne pas re-créer ce qui à déjà été fait.
 
 ## Pourquoi le nom Valerian ?
+
 C'est une longue explication...
 
 ## Installation et lancement de l'application Valerian
@@ -70,6 +71,7 @@ docker run -d -p 80:5003 -p 8080:5004 -e GLOBAL_IP="192.168.168.143" \
    -e PORT_SERVER_QCM="80" \
    -e PORT_SERVER_CORRECTOR="8080" clementgiaime/valerian-dev
 ```
+
 Dans ce cas l'adresse de connection est  http://GLOBAL_IP/
 Correspondance :
 
@@ -79,10 +81,11 @@ Correspondance :
 | BIND_PORT_QCM            | Correspond au port d'écoute du serveur QCM                                                                                |
 | BIND_PORT_CORRECTOR      | Correspond au port d'écoute du Corrector QCM                                                                              |
 | BIND_PORT_AUTHENTICATION | Correspond au port d'écoute du authentification QCM                                                                       |
-| PORT_SERVER_QCM          | Correspond au port le hôte sur lequel BIND_PORT_QCM est mappé                                                             |
-| PORT_SERVER_CORRECTOR    | Correspond au port le hôte sur lequel BIND_PORT_CORRECTOR est mappé                                                       |    
+| PORT_SERVER_QCM          | Correspond au port le hôte sur lequel BIND_PORT_QCM est mappé                                                             |
+| PORT_SERVER_CORRECTOR    | Correspond au port le hôte sur lequel BIND_PORT_CORRECTOR est mappé                                                       |
 
 Bien sur les port mappés `-p 80:5003 -p 8080:5004` doivent correspondre avec les variables `PORT_SERVER_QCM` `BIND_PORT_QCM` `BIND_PORT_CORRECTOR` `BIND_PORT_AUTHENTICATION`
+
 #### valerian-prod
 
 Version de valerian déployé selon les best pratices, en utilisant Gunicorn. Gunicorn est un serveur web HTTP WSGI écrit en Python.
@@ -110,6 +113,7 @@ docker run -d -p 80:5003 -p 8080:5004 -e GLOBAL_IP="192.168.168.143" \
    -e PORT_SERVER_QCM="80" \
    -e PORT_SERVER_CORRECTOR="8080" clementgiaime/valerian-dev
 ```
+
 Dans ce cas l'adresse de connection est  http://GLOBAL_IP/
 Correspondance :
 
@@ -119,8 +123,8 @@ Correspondance :
 | BIND_PORT_QCM            | Correspond au port d'écoute du serveur QCM                                                                                |
 | BIND_PORT_CORRECTOR      | Correspond au port d'écoute du Corrector QCM                                                                              |
 | BIND_PORT_AUTHENTICATION | Correspond au port d'écoute du authentification QCM                                                                       |
-| PORT_SERVER_QCM          | Correspond au port le hôte sur lequel BIND_PORT_QCM est mappé                                                             |
-| PORT_SERVER_CORRECTOR    | Correspond au port le hôte sur lequel BIND_PORT_CORRECTOR est mappé                                                       |    
+| PORT_SERVER_QCM          | Correspond au port le hôte sur lequel BIND_PORT_QCM est mappé                                                             |
+| PORT_SERVER_CORRECTOR    | Correspond au port le hôte sur lequel BIND_PORT_CORRECTOR est mappé                                                       |
 
 Bien sur les port mappés `-p 80:5003 -p 8080:5004` doivent correspondre avec les variables `PORT_SERVER_QCM` `BIND_PORT_QCM` `BIND_PORT_CORRECTOR` `BIND_PORT_AUTHENTICATION`
 
@@ -141,6 +145,7 @@ docker run -d -p 80:80 clementgiaime/valerian-nginx
 **3°/** sourcer le fichier de configuration avec la commande `source ./configuration`
 
 **4°/** Lancer les services
+
 ```bash
 cd Corrector-QCM/
 python3.7 app.py &
@@ -153,7 +158,9 @@ python3.7 app.py &
 ```
 
 ## Architecture logiciels
-Photo
+
+![image](image.jpg)
+
 ## Utilisation
 
 ### Les utilisateurs
@@ -161,15 +168,18 @@ Photo
 Il existe deux type d'utilisateur les étudiants et les professeurs
 
 **Profil etudiant :**
+
 * Voir la liste des QCM qu'il peut faire
 * Peut faire un QCM
 * Peut voir la correction du QCM une fois celui fait
 
 Exemple de profil utilisateur :
+
 * GIAIME
 * GULDNER
 
 **Profil Professeur :**
+
 * Voir la liste de ces QCM
 * Supprimer un QCM
 * Ajouter un nouveau QCM
@@ -177,6 +187,7 @@ Exemple de profil utilisateur :
 > Un QCM est assosié à une matiere, mais elle peut-être assosié à plusieur formation. Par exemple GIAIME et GULDNER ont comme matiere commune RT0701 et AN0701. Un QCM peut-être créé pour la matiere et ainsi être assosié à la formation AN0701. Dans ce cas GIAIME et GULDNER veron tout deux le QCM.
 
 Exemple de profil professeur :
+
 * FLAUZAC
 * BELLECAVE
 * STEFFENEL
